@@ -213,11 +213,35 @@ class MonBloc extends BlockEngine
 
 Pas de commentaire de chemin en haut du fichier — c'est inutile.
 
+Toujours inclure `align{!! $attributes['align'] ?? 'normal' !!}` dans les classes du bloc pour que l'alignement Gutenberg (`alignfull`, `alignwide`, `alignnormal`…) soit reflété en CSS.
+
 ```blade
-<section class="block-mon-bloc {{ $attributes['className'] ?? '' }}">
+<section class="block-mon-bloc {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}">
     {{-- $data = champs MetaBox, $attributes = attrs Gutenberg, $is_preview = bool --}}
 </section>
 ```
+
+### BEM et SCSS des blocs
+
+- La classe racine du bloc est `.block-{id}` (ex : `.block-hero`).
+- Les sous-éléments suivent le préfixe complet : `block-{id}__element` (ex : `block-hero__bg`), **pas** `{id}__element`.
+- Tout le SCSS est imbriqué sous `.block-{id}` via `&__element` — pas de classes BEM à plat.
+
+```scss
+.block-mon-bloc {
+    // styles du bloc
+
+    &__titre {
+        // styles de l'élément
+    }
+
+    &__image {
+        // styles de l'élément
+    }
+}
+```
+
+- Pour un bloc pleine hauteur, utiliser `min-height: 100dvh` (pas `height`) afin de permettre le débordement de contenu.
 
 ### InnerBlocks vs champs MetaBox
 

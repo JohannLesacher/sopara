@@ -1,14 +1,47 @@
-$blancCasse: #eeecde;
-$turquoise: #7FB2A2;
-$or: #D1B15C;
-$noir: #000;
+// Primitive — Primary
+$primary-0: #FF0000;
+$primary-1: #FF2F2F;
+$primary-2: #FF5A5A;
+$primary-3: #FF8D8D;
+$primary-4: #FFC7C7;
 
+// Primitive — Secondary
+$secondary-0: #444444;
+$secondary-1: #70706E;
+$secondary-2: #959493;
+$secondary-3: #CCCCD0;
+$secondary-4: #EDEDF0;
+
+// Primitive — Neutral
+$black:            #000000;
+$white:            #FFFFFF;
+
+// Primitive — System
+$success-green:       #027A48;
+$success-green-light: #ECFDF3;
+$error-red:           #B42318;
+$error-red-light:     #FEF3F2;
+
+// Typography
+$font-primary:   'Figtree', sans-serif;
+$font-secondary: 'Syncopate', sans-serif;
+
+// Map
 $colors: (
-  "blancCasse": $blancCasse,
-  "turquoise": $turquoise,
-  "or": $or,
-  "noir": $noir
+  "primary-0": $primary-0,
+  "primary-1": $primary-1,
+  "primary-2": $primary-2,
+  "primary-3": $primary-3,
+  "primary-4": $primary-4,
+  "secondary-0": $secondary-0,
+  "secondary-1": $secondary-1,
+  "secondary-2": $secondary-2,
+  "secondary-3": $secondary-3,
+  "secondary-4": $secondary-4,
+  "black": $black,
+  "white": $white,
+  "success-green": $success-green,
+  "success-green-light": $success-green-light,
+  "error-red": $error-red,
+  "error-red-light": $error-red-light,
 );
-
-$textFont: 'Verdana', sans-serif;
-$titleFont: 'Georgia', serif;

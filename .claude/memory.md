@@ -30,6 +30,8 @@
 
 ## Components créés
 
+- **Hero** (en cours de planification) — image de fond, zone titre centrée verticalement, zone texte bas (InnerBlocks), secteurs d'activité (position absolue bas-droite)
+
 ## Learned patterns
 
 - **BlockServiceProvider auto-discovery**: scans `app/Blocks/` and calls `register_block()` on each class — no manual registration needed, just create the file
@@ -38,7 +40,10 @@
 - **`$is_preview` for editor placeholders**: use `@elseif ($is_preview)` branches to show placeholder content in Gutenberg editor when fields are empty
 - **Block template path convention**: `BlockEngine::renderBlock()` resolves view as `blocks.{block-id}` (e.g. `blocks.card` → `resources/views/blocks/card.blade.php`)
 - **InnerBlocks over wysiwyg**: for any free-form editorial content in a block, always use `<InnerBlocks />` — never `wysiwyg` MetaBox field. CTA uses separate `text` + `url` fields.
+- **Floating UI panel in a block**: un élément visuellement indépendant du flux de contenu (ex. secteurs d'activité dans le hero) utilise `position: absolute` sur le parent `.block-*` (`position: relative`) avec des offsets identiques sur deux côtés (ex. `bottom: Xpx; right: Xpx`) pour l'ancrer sans perturber l'alignement des zones de contenu.
 
 ## Recurring errors to avoid
+
+- **`image_advanced` vs `single_image`**: utiliser `single_image` pour une image unique (ex. fond de hero), `image_advanced` pour une liste d'images (ex. galerie secteurs)
 
 ## Important files

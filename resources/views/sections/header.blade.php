@@ -27,10 +27,16 @@
         </nav>
       @endif
 
-      @if($has_cta)
-        <div class="banner__cta">
-          <a href="/contact" class="btn btn-primary">Contact</a>
-        </div>
+      @if($navigationCTA)
+        <nav class="banner__cta banner__nav banner__nav--{{ $align }}" aria-label="Main">
+          <ul class="nav-primary">
+            @foreach($navigationCTA as $item)
+              <li class="menu-item {{ $item->active ? 'is-active' : '' }}">
+                <a href="{{ $item->url }}">{{ $item->label }}</a>
+              </li>
+            @endforeach
+          </ul>
+        </nav>
       @endif
 
       <button class="burger" aria-label="Menu">

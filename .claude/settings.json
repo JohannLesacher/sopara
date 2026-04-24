@@ -65,7 +65,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Review the conversation. Did Claude discover new patterns, design tokens, recurring errors, or architectural decisions during this session that are NOT already documented in .claude/memory.md? If yes, respond with {\"decision\": \"block\", \"reason\": \"Update .claude/memory.md with the new discoveries before stopping. Add to the appropriate section (Key Facts, Learned patterns, or Recurring errors to avoid). Only append, never overwrite.\"}. If nothing new was discovered, respond with {\"decision\": \"allow\"}."
+            "prompt": "Review the conversation. Did Claude actually write or modify code (PHP, Blade, SCSS, JS, JSON config) during this session — not just plan or discuss? If no code was written, respond with {\"decision\": \"allow\"}. If code was written: did Claude discover new patterns, design tokens, recurring errors, or architectural decisions that are NOT already documented in .claude/memory.md? If yes, respond with {\"decision\": \"block\", \"reason\": \"Update .claude/memory.md with the new discoveries before stopping. Add to the appropriate section (Key Facts, Learned patterns, or Recurring errors to avoid). Only append, never overwrite.\"}. If nothing new was discovered, respond with {\"decision\": \"allow\"}."
           }
         ]
       }

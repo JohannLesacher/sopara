@@ -1,7 +1,7 @@
 :root {
-  --content-width: 720px;
-  --wide-width: 816px;
-  --extra-wide-width: 1100px;
+  --content-width: 1560px;
+  --wide-width: 1600px;
+  --extra-wide-width: 1600px;
   --container-padding: 1.5rem;
   --header-height: 75px;
   --wp--preset--spacing--20: clamp(0.26rem, 0.2rem + 0.33vw, 0.44rem);
@@ -86,8 +86,8 @@
   max-width: var(--extra-wide-width);
 }
 
-.main img,
-.main video {
+img,
+video {
   width: 100%;
   height: auto;
   display: block;

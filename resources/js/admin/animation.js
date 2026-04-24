@@ -1,26 +1,28 @@
 const { createHigherOrderComponent } = wp.compose;
 const { InspectorControls } = wp.blockEditor;
 const { PanelBody, ToggleControl } = wp.components;
+const { createElement: el, Fragment } = wp.element;
 
 const addAnimationControl = createHigherOrderComponent((BlockEdit) => {
   return (props) => {
     const { attributes, setAttributes, name } = props;
     const allowedBlocks = ['core/heading', 'core/group', 'core/columns', 'core/column', 'core/image'];
-    if (!allowedBlocks.includes(name)) return <BlockEdit {...props} />;
 
-    return (
-      <>
-        <BlockEdit {...props} />
-        <InspectorControls>
-          <PanelBody title="Animations">
-            <ToggleControl
-              label="Animer l'apparition"
-              checked={attributes.animateOnScroll}
-              onChange={(val) => setAttributes({ animateOnScroll: val })}
-            />
-          </PanelBody>
-        </InspectorControls>
-      </>
+    if (!allowedBlocks.includes(name)) return el(BlockEdit, props);
+
+    return el(
+      Fragment,
+      null,
+      el(BlockEdit, props),
+      el(InspectorControls, null,
+        el(PanelBody, { title: 'Animations' },
+          el(ToggleControl, {
+            label: "Animer l'apparition",
+            checked: attributes.animateOnScroll,
+            onChange: (val) => setAttributes({ animateOnScroll: val }),
+          })
+        )
+      )
     );
   };
 }, 'addAnimationControl');

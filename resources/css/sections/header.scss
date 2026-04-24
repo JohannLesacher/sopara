@@ -1,6 +1,8 @@
+@use '../config/variables' as *;
+
 .banner {
   --banner-bg: transparent;
-  --banner-scrolled-bg: rgba(255, 255, 255, 0.55);
+  --banner-scrolled-bg: rgba(0, 0, 0, 0.85);
   --banner-color: #000;
   --burger-color: var(--banner-color);
 
@@ -12,8 +14,10 @@
   align-items: center;
 
   &__wrapper {
-    grid-column: content;
+    grid-column: fullwidth;
     display: flex;
+    height: 100%;
+    align-items: stretch;
   }
 
   &.is-fixed {
@@ -38,9 +42,11 @@
     grid-column: content-start;
     display: flex;
     align-items: center;
+    align-self: center;
     z-index: 1010;
     flex-shrink: 0;
     height: calc(var(--header-height) * 0.6);
+    margin-left: 1rem;
 
     svg {
       height: calc(var(--header-height) * 0.6);
@@ -51,6 +57,7 @@
   &__nav {
     grid-column: content;
     display: none;
+    align-self: center;
 
     @media (min-width: 1024px) {
       display: block;
@@ -92,6 +99,32 @@
         gap: var(--wp--preset--spacing--20);
         font-weight: 600;
         font-size: 0.875rem;
+      }
+    }
+  }
+
+  &__cta {
+    height: 100%;
+    align-self: stretch;
+
+    .nav-primary {
+      height: 100%;
+    }
+
+    .menu-item {
+      height: 100%;
+      background: var(--wp--preset--color--primary-0);
+      color: var(--wp--preset--color--white);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+
+      a {
+        text-transform: uppercase;
+        font-family: $font-secondary;
+        font-size: var(--wp--preset--font-size--small);
+        font-weight: 700;
+        text-decoration: none;
       }
     }
   }
@@ -144,12 +177,15 @@
       span {
         transform-origin: 3px 1px;
       }
+
       span:nth-child(1) {
         transform: rotate(45deg);
       }
+
       span:nth-child(2) {
         opacity: 0;
       }
+
       span:nth-child(3) {
         transform: rotate(-45deg);
       }

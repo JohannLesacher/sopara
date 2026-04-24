@@ -4,8 +4,8 @@
   "settings": {
     "appearanceTools": true,
     "layout": {
-      "contentSize": "900px",
-      "wideSize": "1100px"
+      "contentSize": "1560px",
+      "wideSize": "1600px"
     },
     "background": {
       "backgroundImage": true
@@ -25,44 +25,64 @@
       "link": true,
       "palette": [
         {
-          "slug": "blanc-casse",
-          "color": "#F6F5EE",
-          "name": "Blanc Cassé"
+          "slug": "primary-0",
+          "color": "#FF0000",
+          "name": "Primary 0"
         },
         {
-          "slug": "bleu",
-          "color": "#64A0DC",
-          "name": "Bleu"
+          "slug": "primary-1",
+          "color": "#FF2F2F",
+          "name": "Primary 1"
         },
         {
-          "slug": "jaune",
-          "color": "#FAD246",
-          "name": "Jaune"
+          "slug": "primary-2",
+          "color": "#FF5A5A",
+          "name": "Primary 2"
         },
         {
-          "slug": "rose",
-          "color": "#F2CBD2",
-          "name": "Rose"
+          "slug": "primary-3",
+          "color": "#FF8D8D",
+          "name": "Primary 3"
         },
         {
-          "slug": "orange",
-          "color": "#DC5328",
-          "name": "Orange"
+          "slug": "primary-4",
+          "color": "#FFC7C7",
+          "name": "Primary 4"
         },
         {
-          "slug": "rouge",
-          "color": "#B43228",
-          "name": "Rouge"
+          "slug": "secondary-0",
+          "color": "#444444",
+          "name": "Secondary 0"
         },
         {
-          "slug": "bordeaux",
-          "color": "#691700",
-          "name": "Bordeaux"
+          "slug": "secondary-1",
+          "color": "#70706E",
+          "name": "Secondary 1"
         },
         {
-          "slug": "noir",
+          "slug": "secondary-2",
+          "color": "#959493",
+          "name": "Secondary 2"
+        },
+        {
+          "slug": "secondary-3",
+          "color": "#CCCCD0",
+          "name": "Secondary 3"
+        },
+        {
+          "slug": "secondary-4",
+          "color": "#EDEDF0",
+          "name": "Secondary 4"
+        },
+        {
+          "slug": "black",
           "color": "#000000",
-          "name": "Noir"
+          "name": "Black"
+        },
+        {
+          "slug": "white",
+          "color": "#FFFFFF",
+          "name": "White"
         }
       ]
     },
@@ -89,92 +109,108 @@
       "defaultFontSizes": false,
       "customFontSize": true,
       "lineHeight": true,
-      "fluid": false,
+      "fluid": true,
       "fontFamilies": [
         {
-          "name": "Inter",
-          "slug": "inter",
-          "fontFamily": "Inter, sans-serif"
+          "name": "Figtree",
+          "slug": "figtree",
+          "fontFamily": "Figtree, sans-serif"
         },
         {
-          "name": "Instrument",
-          "slug": "instrument",
-          "fontFamily": "Instrument, serif"
-        },
-        {
-          "name": "LT Museum",
-          "slug": "lt-museum",
-          "fontFamily": "LT Museum, serif"
+          "name": "Syncopate",
+          "slug": "syncopate",
+          "fontFamily": "Syncopate, sans-serif"
         }
       ],
       "fontSizes": [
         {
-          "name": "Extra Extra Small",
-          "slug": "xx-small",
-          "size": "10px",
-          "fluid": false
-        },
-        {
-          "name": "Extra Small",
-          "slug": "x-small",
-          "size": "14px",
+          "name": "Tiny",
+          "slug": "tiny",
+          "size": "0.75rem",
           "fluid": false
         },
         {
           "name": "Small",
           "slug": "small",
-          "size": "16px",
+          "size": "0.875rem",
+          "fluid": false
+        },
+        {
+          "name": "Regular",
+          "slug": "regular",
+          "size": "1rem",
           "fluid": false
         },
         {
           "name": "Medium",
           "slug": "medium",
-          "size": "18px",
-          "fluid": false
-        },
-        {
-          "name": "Medium-Large",
-          "slug": "medium-large",
-          "size": "22px",
-          "fluid": false
-        },
-        {
-          "name": "Medium-Extra-Large",
-          "slug": "medium-x-large",
-          "size": "26px",
-          "fluid": false
-        },
-        {
-          "name": "Medium-Extra-Extra-Large",
-          "slug": "medium-xx-large",
-          "size": "30px",
+          "size": "1.125rem",
           "fluid": false
         },
         {
           "name": "Large",
           "slug": "large",
-          "size": "36px",
+          "size": "1.25rem",
+          "fluid": false
+        },
+        {
+          "name": "Tagline",
+          "slug": "tagline",
+          "size": "1rem",
+          "fluid": false
+        },
+        {
+          "name": "Heading 6",
+          "slug": "h6",
+          "size": "1.25rem",
           "fluid": {
-            "min": "24px",
-            "max": "36px"
+            "min": "1.125rem",
+            "max": "1.25rem"
           }
         },
         {
-          "name": "Extra Large",
-          "slug": "x-large",
-          "size": "48px",
+          "name": "Heading 5",
+          "slug": "h5",
+          "size": "1.5rem",
           "fluid": {
-            "min": "32px",
-            "max": "48px"
+            "min": "1.25rem",
+            "max": "1.5rem"
           }
         },
         {
-          "name": "Extra Extra Large",
-          "slug": "xx-large",
-          "size": "56px",
+          "name": "Heading 4",
+          "slug": "h4",
+          "size": "2rem",
           "fluid": {
-            "min": "32px",
-            "max": "56px"
+            "min": "1.5rem",
+            "max": "2rem"
+          }
+        },
+        {
+          "name": "Heading 3",
+          "slug": "h3",
+          "size": "2.5rem",
+          "fluid": {
+            "min": "2rem",
+            "max": "2.5rem"
+          }
+        },
+        {
+          "name": "Heading 2",
+          "slug": "h2",
+          "size": "3rem",
+          "fluid": {
+            "min": "2.25rem",
+            "max": "3rem"
+          }
+        },
+        {
+          "name": "Heading 1",
+          "slug": "h1",
+          "size": "3.5rem",
+          "fluid": {
+            "min": "2.5rem",
+            "max": "3.5rem"
           }
         }
       ]
@@ -190,11 +226,58 @@
   },
   "styles": {
     "typography": {
-      "fontFamily": "'Inter', sans-serif",
-      "fontSize": "16px"
+      "fontFamily": "var(--wp--preset--font-family--figtree)",
+      "fontSize": "var(--wp--preset--font-size--regular)"
     },
     "spacing": {
       "blockGap": "2rem"
+    },
+    "elements": {
+      "h1": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--syncopate)",
+          "fontSize": "var(--wp--preset--font-size--h-1)",
+          "lineHeight": "1.2",
+          "textTransform": "uppercase"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--syncopate)",
+          "fontSize": "var(--wp--preset--font-size--h-2)",
+          "lineHeight": "1.2",
+          "textTransform": "uppercase"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--figtree)",
+          "fontSize": "var(--wp--preset--font-size--h-3)",
+          "lineHeight": "1.2"
+        }
+      },
+      "h4": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--syncopate)",
+          "fontSize": "var(--wp--preset--font-size--h-4)",
+          "lineHeight": "1.3",
+          "textTransform": "uppercase"
+        }
+      },
+      "h5": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--figtree)",
+          "fontSize": "var(--wp--preset--font-size--h-5)",
+          "lineHeight": "1.4"
+        }
+      },
+      "h6": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--figtree)",
+          "fontSize": "var(--wp--preset--font-size--h-6)",
+          "lineHeight": "1.4"
+        }
+      }
     }
   }
 }

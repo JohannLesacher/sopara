@@ -74,6 +74,7 @@ add_action('after_setup_theme', function () {
      */
     register_nav_menus( [
         'primary_navigation'      => __( 'Menu principal', 'sage' ),
+        'cta_navigation'      => __( 'Menu CTA', 'sage' ),
         'footer_navigation'       => __( 'Menu Footer', 'sage' ),
         'legal_footer_navigation' => __( 'Menu Mentions Légales', 'sage' ),
     ] );
