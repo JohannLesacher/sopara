@@ -86,6 +86,7 @@
       height: 4.375rem;
       object-fit: cover;
       aspect-ratio: 1;
+      border-radius: 6px;
     }
 
     &-titre {
@@ -96,6 +97,7 @@
       width: min-content;
       line-height: 1.5;
       font-weight: 700;
+      text-align: right;
     }
   }
 }

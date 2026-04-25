@@ -1,0 +1,19 @@
+.wp-block-button {
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+    transition: all 150ms ease-in;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.has-primary-0-background-color {
+      &:hover {
+        transition: all 150ms ease-in;
+        background-color: var(--wp--preset--color--primary-1) !important;
+      }
+    }
+  }
+}

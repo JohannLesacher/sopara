@@ -17,10 +17,6 @@ class Hero extends BlockEngine {
             'render_callback' => [ parent::class, 'renderBlock' ],
             'enqueue_assets'  => function () {
                 wp_enqueue_style( 'hero', Vite::asset( 'resources/css/blocks/hero.scss' ), [], null );
-
-                if ( ! is_admin() ) {
-                    wp_enqueue_script_module( 'hero', Vite::asset( 'resources/js/blocks/hero.js' ), [], null );
-                }
             },
             'supports'        => [
                 'align'           => true,

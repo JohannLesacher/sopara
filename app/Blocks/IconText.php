@@ -14,6 +14,7 @@ class IconText extends BlockEngine
             'id' => 'icon-text',
             'type' => 'block',
             'category' => 'sur-mesure',
+            'context'         => 'normal',
             'icon' => 'admin-generic',
             'render_callback' => [parent::class, 'renderBlock'],
             'enqueue_assets' => function () {
