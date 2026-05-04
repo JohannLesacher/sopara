@@ -1,0 +1,8 @@
+p {
+  &.is-style-outline {
+    -webkit-text-stroke: 2px currentColor;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    line-height: 1;
+  }
+}

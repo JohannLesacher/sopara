@@ -1,0 +1,10 @@
+.block-slider {
+  .block-slide {
+    flex-grow: 1;
+    align-self: stretch;
+
+    > * {
+      height: 100%;
+    }
+  }
+}
