@@ -34,6 +34,10 @@ class MaskedImage extends Composer
         return (int) ($this->data()['image'] ?? 0);
     }
 
+    public function imageFixe(): bool {
+        return (bool) ( $this->data()['image_fixed'] ?? false );
+    }
+
     public function aspectRatio(): string
     {
         $id = $this->svgId();

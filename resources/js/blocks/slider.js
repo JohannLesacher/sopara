@@ -1,0 +1,1 @@
+console.log('Block slider initialized');

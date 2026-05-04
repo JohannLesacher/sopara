@@ -1,0 +1,57 @@
+@use "../config/variables" as *;
+
+.block-texte-defilant {
+  overflow: hidden;
+  white-space: nowrap;
+
+  &__track {
+    display: flex;
+    width: max-content;
+    animation: marquee-gauche var(--marquee-duration, 20s) linear infinite;
+  }
+
+  &[data-direction='droite'] &__track {
+    animation-name: marquee-droite;
+  }
+
+  &[data-vitesse='lent'] {
+    --marquee-duration: 40s;
+  }
+
+  &[data-vitesse='normal'] {
+    --marquee-duration: 20s;
+  }
+
+  &[data-vitesse='rapide'] {
+    --marquee-duration: 10s;
+  }
+
+  &__text {
+    display: block;
+    padding-inline: 0.5em;
+    font-family: $font-secondary;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--secondary-3);
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+@keyframes marquee-gauche {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--item-width, 50%)));
+  }
+}
+
+@keyframes marquee-droite {
+  from {
+    transform: translateX(calc(-1 * var(--item-width, 50%)));
+  }
+  to {
+    transform: translateX(0);
+  }
+}

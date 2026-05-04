@@ -267,7 +267,16 @@ Bloc Hero (visuel + texte + bouton) :
 
 **Règle simple :** doute → `<InnerBlocks />`. Le champ `wysiwyg` n'a quasiment aucun cas d'usage légitime.
 
+### JS par bloc — règle
+
+N'utiliser `--js` dans `wp acorn make:block` que si le bloc nécessite **effectivement** du JS. Si aucun JS n'est requis :
+- Ne pas passer `--js`
+- Ne pas créer de fichier JS vide ou commenté (le glob Vite le bundle inutilement)
+- Ne pas mettre `wp_enqueue_script_module` dans `enqueue_assets`
+
 ---
+
+> **⚠️ Ce skill ne doit jamais être modifié sans approbation explicite de l'utilisateur.** Aucune mise à jour, ajout ou suppression de contenu dans ce fichier sans que l'utilisateur ait dit de le faire.
 
 ## 3. Champs MetaBox
 
@@ -733,7 +742,112 @@ public function with(): array
 
 ---
 
-## 12. Troubleshooting
+## 12. Étendre les blocs core Gutenberg
+
+Pour modifier le comportement d'un bloc WP core (rendu PHP, attributs, inspector controls), ne pas utiliser un View Composer — créer une classe dans `app/Blocks/` avec une méthode `boot()` statique.
+
+### Classe `CoreButton` — pattern de référence
+
+```php
+namespace App\Blocks;
+
+class CoreButton
+{
+    public static function boot(): void
+    {
+        add_filter('register_block_type_args', [static::class, 'registerAttributes'], 10, 2);
+        add_filter('render_block', [static::class, 'addIcon'], 10, 2);
+    }
+
+    public static function registerAttributes(array $args, string $name): array
+    {
+        if ($name !== 'core/button') {
+            return $args;
+        }
+        $args['attributes']['iconColor'] = ['type' => 'string'];
+        $args['attributes']['iconPosition'] = ['type' => 'string', 'default' => 'right'];
+        return $args;
+    }
+
+    public static function addIcon(string $html, array $block): string
+    {
+        if ($block['blockName'] !== 'core/button') return $html;
+        // modification du HTML rendu...
+        return $html;
+    }
+}
+```
+
+`BlockServiceProvider` appelle automatiquement `boot()` sur toutes les classes de `app/Blocks/` qui l'implémentent.
+
+> **Important :** pour enregistrer des attributs custom sur un bloc MB Blocks, utiliser le même filtre `register_block_type_args` — la clé `attributes` dans le tableau `meta_boxes` est ignorée par MB Blocks pour le schéma REST.
+
+### Ajouter des InspectorControls côté JS
+
+Pattern dans `resources/js/admin/{feature}.js`, importé depuis `editor.js` :
+
+```js
+import { addFilter } from '@wordpress/hooks';
+import { createHigherOrderComponent } from '@wordpress/compose';
+import { InspectorControls } from '@wordpress/block-editor';
+import { createElement as el, Fragment } from '@wordpress/element';
+import {
+  __experimentalToggleGroupControl as ToggleGroupControl,
+  __experimentalToggleGroupControlOption as ToggleGroupControlOption,
+  __experimentalToolsPanel as ToolsPanel,
+  __experimentalToolsPanelItem as ToolsPanelItem,
+  __experimentalUnitControl as UnitControl,
+} from '@wordpress/components';
+
+// 1. Enregistrer l'attribut
+addFilter('blocks.registerBlockType', 'theme/mon-feature', (settings, name) => {
+  if (name !== 'core/button') return settings;
+  settings.attributes = { ...settings.attributes, monAttr: { type: 'string' } };
+  return settings;
+});
+
+// 2. Ajouter le contrôle
+const withMonControl = createHigherOrderComponent((BlockEdit) => (props) => {
+  if (props.name !== 'core/button') return el(BlockEdit, props);
+  return el(Fragment, {},
+    el(BlockEdit, props),
+    el(InspectorControls, { group: 'styles' },
+      el(ToolsPanel, { label: 'Mon réglage', resetAll: () => props.setAttributes({ monAttr: undefined }) },
+        el(ToolsPanelItem, {
+          label: 'Mon attribut',
+          isShownByDefault: true,
+          hasValue: () => !!props.attributes.monAttr,
+          onDeselect: () => props.setAttributes({ monAttr: undefined }),
+        },
+          el(ToggleGroupControl, { value: props.attributes.monAttr || 'defaut', onChange: (val) => props.setAttributes({ monAttr: val }), isBlock: true },
+            el(ToggleGroupControlOption, { value: 'option-a', label: 'A' }),
+            el(ToggleGroupControlOption, { value: 'option-b', label: 'B' }),
+          ),
+        ),
+      ),
+    ),
+  );
+}, 'withMonControl');
+
+addFilter('editor.BlockEdit', 'theme/mon-control', withMonControl);
+```
+
+**Namespace des blocs MB Blocks en JS :** `meta-box/{block-id}` (ex. `meta-box/masked-image`)
+
+**Slots InspectorControls disponibles :**
+- `group: 'color'` → onglet Styles, section Couleur (`panelId: props.clientId` requis)
+- `group: 'styles'` → onglet Styles, section générale (utiliser `ToolsPanel` + `ToolsPanelItem` sans `panelId`)
+- `group: 'dimensions'` → onglet Styles, section Dimensions
+- Pas de group → onglet Paramètres
+
+**Composants expérimentaux à utiliser (préfixe `__experimental`) :**
+- `ToggleGroupControl` + `ToggleGroupControlOption`
+- `ToolsPanel` + `ToolsPanelItem`
+- `UnitControl`
+
+---
+
+## 13. Troubleshooting
 
 ### Cache Acorn
 

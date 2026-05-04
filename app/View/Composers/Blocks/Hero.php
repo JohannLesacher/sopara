@@ -21,14 +21,14 @@ class Hero extends Composer
         if (! $id) {
             return '';
         }
-        $src = wp_get_attachment_image_src($id, 'full');
+        $src = wp_get_attachment_image_src($id, 'very-large');
 
         return $src ? $src[0] : '';
     }
 
     public function titre(): string
     {
-        return wpautop($this->data()['titre'] ?? '');
+        return nl2br($this->data()['titre'] ?? '', false);
     }
 
     public function titreSecteurs(): string

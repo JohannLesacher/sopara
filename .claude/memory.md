@@ -34,7 +34,9 @@
 
 ## Learned patterns
 
-- **BlockServiceProvider auto-discovery**: scans `app/Blocks/` and calls `register_block()` on each class — no manual registration needed, just create the file
+- **BlockServiceProvider auto-discovery**: scans `app/Blocks/` and calls `register_block()` (MB Blocks) AND `boot()` (core block extensions) on each class — no manual registration needed
+- **CoreButton pattern**: pour étendre un bloc core (render_block, register_block_type_args), créer `app/Blocks/CoreButton.php` avec `boot()` statique — `BlockServiceProvider` l'appelle automatiquement
+- **editor.js split**: logique éditeur Gutenberg séparée en fichiers `resources/js/admin/*.js` (un par fonctionnalité), editor.js ne contient que des imports
 - **`!is_admin()` wrap for `wp_enqueue_script_module`**: always wrap JS enqueue in `if (!is_admin())` inside `enqueue_assets` to avoid editor conflicts
 - **wysiwyg field with `'raw' => true`**: needed so MetaBox returns raw HTML instead of escaped content; required for `{!! !!}` rendering in Blade
 - **`$is_preview` for editor placeholders**: use `@elseif ($is_preview)` branches to show placeholder content in Gutenberg editor when fields are empty
@@ -44,6 +46,10 @@
 
 ## Recurring errors to avoid
 
+- **MB Blocks InnerBlocks + JS libraries (ex. Splide)**: MB Blocks enveloppe `<InnerBlocks />` dans un `<div>` anonyme en PHP → les slides/items ne sont PAS fils directs du conteneur attendu par la lib JS. Résolution non trouvée proprement à ce jour — le workaround JS (`querySelector + classList.add`) a été rejeté comme hacky. À résoudre avant de recréer un slider avec InnerBlocks.
+
 - **`image_advanced` vs `single_image`**: utiliser `single_image` pour une image unique (ex. fond de hero), `image_advanced` pour une liste d'images (ex. galerie secteurs)
+- **MB Blocks custom attributes via `attributes` key**: la clé `attributes` dans le tableau meta_boxes est ignorée par MB Blocks pour le schéma REST → toujours utiliser `add_filter('register_block_type_args', ...)` à la place
+- **MB Blocks namespace JS**: le namespace est `meta-box/{block-id}` (pas `mbblocks/`)
 
 ## Important files

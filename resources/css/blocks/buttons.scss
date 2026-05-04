@@ -1,8 +1,20 @@
 .wp-block-button {
+  &.is-style-with-icon.has-icon-left &__link {
+    flex-direction: row-reverse;
+  }
+  &.is-style-border-with-icon.has-icon-left &__link {
+    flex-direction: row-reverse;
+  }
+
   &__link {
+    background: transparent none;
+    border-color: currentColor;
+    border-width: 2px;
+    border-style: solid;
     display: flex;
     align-items: center;
     gap: 1ch;
+    padding: 0.5rem 1.5rem;
     transition: all 150ms ease-in;
 
     &:hover {
@@ -13,6 +25,20 @@
       &:hover {
         transition: all 150ms ease-in;
         background-color: var(--wp--preset--color--primary-1) !important;
+      }
+    }
+
+    &.has-primary-1-background-color {
+      &:hover {
+        transition: all 150ms ease-in;
+        background-color: var(--wp--preset--color--primary-2) !important;
+      }
+    }
+
+    &.has-primary-2-background-color {
+      &:hover {
+        transition: all 150ms ease-in;
+        background-color: var(--wp--preset--color--primary-3) !important;
       }
     }
   }

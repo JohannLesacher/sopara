@@ -1,3 +1,5 @@
+import {animate, svg} from 'animejs';
+
 document.addEventListener('DOMContentLoaded', () => {
   const observerOptions = {
     rootMargin: '0px 0px -50px 0px',
@@ -24,3 +26,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.is-animated').forEach(el => observer.observe(el));
 });
+
+/* Button Icon Animation */
+const buttonIconShapeAnimation = () => {
+  const buttons = document.querySelectorAll('.wp-block-button.is-style-with-icon, .wp-block-button.is-style-border-with-icon');
+  if (buttons.length === 0) return;
+
+  buttons.forEach((button, index) => {
+    const path = button.querySelector('.wp-block-button__link svg path');
+    if (!path) return;
+
+    // Create hidden SVG holding the original shape for morphTo to reference
+    const originalId = `morph-original-${index}`;
+    const hiddenSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    hiddenSvg.style.display = 'none';
+    const hiddenPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    hiddenPath.setAttribute('id', originalId);
+    hiddenPath.setAttribute('d', path.getAttribute('d'));
+    hiddenSvg.appendChild(hiddenPath);
+    document.body.appendChild(hiddenSvg);
+
+    button.addEventListener('mouseenter', () => {
+      animate(path, {
+        d: svg.morphTo('#morphButtonIconShape path'),
+        duration: 300,
+        ease: 'inOut(2)',
+      });
+    });
+
+    button.addEventListener('mouseleave', () => {
+      animate(path, {
+        d: svg.morphTo(`#${originalId}`),
+        duration: 300,
+        ease: 'inOut(2)',
+      });
+    });
+  });
+};
+
+document.addEventListener('DOMContentLoaded', buttonIconShapeAnimation);

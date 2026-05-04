@@ -4,7 +4,7 @@ export const initHeader = () => {
   if (!header) return;
 
   const CONFIG = {
-    smart: false,
+    smart: true,
     threshold: 100,
   };
 
