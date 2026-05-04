@@ -11,3 +11,10 @@
 
 @use "blocks/buttons";
 @use "blocks/paragraph";
+
+/* Ajustements editor */
+.block-image-card {
+  img {
+    height: 33dvh;
+  }
+}

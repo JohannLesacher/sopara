@@ -278,6 +278,148 @@ N'utiliser `--js` dans `wp acorn make:block` que si le bloc nécessite **effecti
 
 > **⚠️ Ce skill ne doit jamais être modifié sans approbation explicite de l'utilisateur.** Aucune mise à jour, ajout ou suppression de contenu dans ce fichier sans que l'utilisateur ait dit de le faire.
 
+## 2b. Blocs Gutenberg natifs (sans MetaBox)
+
+Pour des blocs avec **InnerBlocks libres** ou des relations parent/enfant complexes, utiliser `registerBlockType` JS + `register_block_type` PHP — pas MetaBox, pas `wp acorn make:block`.
+
+**Cas d'usage :** bloc parent qui ne contient que des enfants d'un type précis (ex: slider/slide), bloc sans champs MetaBox.
+
+### Organisation des fichiers
+
+```
+resources/js/admin/blocks/    # registerBlockType (éditeur) — importé depuis editor.js
+resources/js/blocks/          # JS frontend — scan Vite auto
+resources/css/blocks/         # CSS — scan Vite auto
+resources/views/blocks/       # Vues Blade — render_callback
+app/Blocks/                   # Classe PHP — auto-découverte par BlockServiceProvider
+```
+
+### Classe PHP — `app/Blocks/MonBloc.php`
+
+Utiliser `boot()` (auto-appelé par `BlockServiceProvider`). La signature `render_callback` reçoit `$content` = HTML des inner blocks déjà rendus.
+
+```php
+namespace App\Blocks;
+
+use Illuminate\Support\Facades\Vite;
+use function Roots\view;
+
+class Slider
+{
+    public static function boot(): void
+    {
+        register_block_type('sur-mesure/slider', [
+            'render_callback' => [self::class, 'renderSlider'],
+        ]);
+
+        register_block_type('sur-mesure/slide', [
+            'render_callback' => [self::class, 'renderSlide'],
+        ]);
+
+        wp_enqueue_style('heat/slider', Vite::asset('resources/css/blocks/slider.scss'), [], null);
+
+        if (! is_admin()) {
+            wp_enqueue_script_module('heat/slider', Vite::asset('resources/js/blocks/slider.js'), [], null);
+        }
+    }
+
+    public static function renderSlider(array $attributes, string $content): string
+    {
+        return view('blocks.slider', compact('attributes', 'content'))->render();
+    }
+
+    public static function renderSlide(array $attributes, string $content): string
+    {
+        return view('blocks.slide', compact('attributes', 'content'))->render();
+    }
+}
+```
+
+> Différence clé avec MB Blocks : `render_callback(array $attributes, string $content)` — pas de `$is_preview`, pas de `$data`. La vue reçoit `$attributes` et `$content`.
+
+### JS éditeur — `resources/js/admin/blocks/mon-bloc-editor.js`
+
+Pas de JSX — utiliser `createElement` (même convention que les autres fichiers `admin/`).
+
+```js
+import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+import { createElement as el } from '@wordpress/element';
+
+registerBlockType('sur-mesure/slider', {
+  title: 'Slider',
+  category: 'sur-mesure',
+  icon: 'slides',
+  attributes: {},
+  supports: {
+    align: ['wide', 'full'],  // toolbar alignement automatique
+  },
+
+  edit: () => {
+    const blockProps = useBlockProps({ className: 'editor-slider' });
+    return el('div', blockProps,
+      el(InnerBlocks, { allowedBlocks: ['sur-mesure/slide'] })
+    );
+  },
+
+  save: () => el(InnerBlocks.Content, null),
+});
+```
+
+**Bloc enfant exclusif** (`parent`) :
+
+```js
+registerBlockType('sur-mesure/slide', {
+  parent: ['sur-mesure/slider'],  // uniquement insérable dans un slider
+  // ...
+  edit: () => el('div', useBlockProps(), el(InnerBlocks, {})),
+  save: () => el(InnerBlocks.Content, null),
+});
+```
+
+Importer depuis `editor.js` :
+```js
+import '@scripts/admin/blocks/slider-editor';
+import '@scripts/admin/blocks/slide-editor';
+```
+
+### Vue Blade
+
+La vue reçoit `$content` (inner blocks rendus) et `$attributes`. Pas de `$data`, pas de `$is_preview`.
+
+```blade
+<div class="block-slider splide {{ $attributes['className'] ?? '' }} {{ isset($attributes['align']) ? 'align' . $attributes['align'] : '' }}">
+    <div class="splide__track">
+        <ul class="splide__list">
+            {!! $content !!}
+        </ul>
+    </div>
+</div>
+```
+
+Bloc enfant (li pour Splide) :
+```blade
+<li class="splide__slide block-slide">
+    {!! $content !!}
+</li>
+```
+
+### `supports.align` vs attribut manuel
+
+Toujours utiliser `supports: { align: [...] }` — WP injecte l'attribut automatiquement + toolbar. Ne jamais déclarer `align` manuellement dans `attributes`.
+
+```js
+// ✓
+supports: { align: ['wide', 'full'] }
+
+// ❌ — WP ne gère pas la toolbar
+attributes: { align: { type: 'string', default: 'left' } }
+```
+
+En Blade : `{{ isset($attributes['align']) ? 'align' . $attributes['align'] : '' }}`
+
+---
+
 ## 3. Champs MetaBox
 
 > **Référence complète :** lire `references/metabox-fields.md` pour la liste des 40+ types de champs, leurs settings et les patterns de récupération. À charger dès qu'une tâche implique de déclarer ou lire des champs MetaBox.

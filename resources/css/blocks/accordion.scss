@@ -1,0 +1,62 @@
+@use "../config/variables" as *;
+
+.wp-block-accordion {
+  &-item {
+    &.is-open {
+      .wp-block-accordion-heading .wp-block-accordion-heading__toggle-icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    &.hide-on-mobile {
+      display: none;
+    }
+  }
+
+  &-heading {
+    border-top: 1px solid currentColor;
+    padding-top: 1rem;
+
+    &:hover {
+      color: $secondary-1;
+      transition: color 0.3s ease-in-out;
+    }
+
+    &__toggle {
+      &:hover .wp-block-accordion-heading__toggle-title {
+        text-decoration: none;
+      }
+
+      &-icon {
+        transform: rotate(0deg);
+        transition: transform 0.3s ease-in-out;
+        font-size: 0;
+        width: 2rem;
+        height: 2rem;
+        margin-left: 1rem;
+
+        &::before {
+          content: url(@images/accordionIcon.svg);
+          font-size: 1rem;
+          position: absolute;
+          inset: 0;
+        }
+      }
+    }
+  }
+
+  &-panel {
+    margin-block-start: 1rem;
+  }
+
+  .show-more-faq-button {
+    background: transparent;
+    border: none;
+    font-size: var(--wp--preset--font-size--small);
+    display: block;
+    margin-inline: auto;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 3rem;
+  }
+}

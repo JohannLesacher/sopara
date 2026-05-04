@@ -1,45 +1,57 @@
+$color-pairs: (
+  'primary-0': 'primary-1',
+  'primary-1': 'primary-2',
+  'primary-2': 'primary-3',
+  'secondary-0': 'secondary-1',
+  'secondary-1': 'secondary-2',
+  'secondary-2': 'secondary-3',
+);
+
 .wp-block-button {
-  &.is-style-with-icon.has-icon-left &__link {
-    flex-direction: row-reverse;
-  }
+  &.is-style-with-icon.has-icon-left &__link,
   &.is-style-border-with-icon.has-icon-left &__link {
     flex-direction: row-reverse;
   }
 
-  &__link {
+  &.is-style-border-with-icon &__link {
     background: transparent none;
-    border-color: currentColor;
-    border-width: 2px;
-    border-style: solid;
+    border: 2px solid currentColor;
+  }
+
+  &__link {
     display: flex;
     align-items: center;
     gap: 1ch;
     padding: 0.5rem 1.5rem;
+    white-space: nowrap;
     transition: all 150ms ease-in;
 
     &:hover {
       text-decoration: none;
     }
 
-    &.has-primary-0-background-color {
-      &:hover {
-        transition: all 150ms ease-in;
-        background-color: var(--wp--preset--color--primary-1) !important;
+    svg {
+      flex-shrink: 0;
+    }
+
+    @each $from, $to in $color-pairs {
+      &.has-#{$from}-background-color:hover {
+        background-color: var(--wp--preset--color--#{$to}) !important;
       }
     }
 
-    &.has-primary-1-background-color {
-      &:hover {
-        transition: all 150ms ease-in;
-        background-color: var(--wp--preset--color--primary-2) !important;
+    .is-style-border-with-icon &,
+    .is-style-outline & {
+      @each $from, $to in $color-pairs {
+        &.has-#{$from}-color:hover {
+          color: var(--wp--preset--color--#{$to}) !important;
+        }
       }
     }
 
-    &.has-primary-2-background-color {
-      &:hover {
-        transition: all 150ms ease-in;
-        background-color: var(--wp--preset--color--primary-3) !important;
-      }
+    .is-style-outline & {
+      background: transparent;
+      border: 2px solid currentColor;
     }
   }
 }

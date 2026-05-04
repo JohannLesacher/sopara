@@ -1,0 +1,63 @@
+.block-image-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  &__media {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  &:hover,
+  &.is-preview {
+    .block-image-card__overlay {
+      opacity: 1;
+    }
+
+    .block-image-card__media img {
+      transform: scale(1.05);
+    }
+  }
+
+  &__content {
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .wp-block-button__link {
+    font-size: 0.875rem;
+  }
+
+  &__icon {
+    position: absolute;
+    bottom: calc(2rem + 2px);
+    right: 2rem;
+    z-index: 9;
+
+    svg {
+      height:37px;
+      width: auto;
+      fill: var(--wp--preset--color--primary-0);
+    }
+  }
+}

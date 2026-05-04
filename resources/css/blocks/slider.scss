@@ -1,4 +1,21 @@
+@property --splide-padding-start {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
 .block-slider {
+  &.alignfull {
+    --splide-padding-start: var(--container-padding);
+
+    @media (min-width: 769px) {
+      --splide-padding-start: calc(
+        max(var(--container-padding), (100dvw - var(--wide-width)) / 2)
+        + (var(--wide-width) - var(--content-width)) / 2
+      );
+    }
+  }
+
   .block-slide {
     flex-grow: 1;
     align-self: stretch;
