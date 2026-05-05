@@ -277,6 +277,11 @@
           "fontSize": "var(--wp--preset--font-size--h-6)",
           "lineHeight": "1.4"
         }
+      },
+      "button": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--regular)"
+        }
       }
     }
   }
