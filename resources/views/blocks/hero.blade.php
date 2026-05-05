@@ -16,19 +16,19 @@
             <InnerBlocks />
         </div>
     </div>
-
-    @if($imagesSecteurs() || $titreSecteurs())
-        <div class="block-hero__secteurs">
-            @if($imagesSecteurs())
-                <div class="block-hero__secteurs-images">
-                    @foreach($imagesSecteurs() as $imageId)
-                        {!! wp_get_attachment_image($imageId, 'thumbnail', false, ['class' => 'block-hero__secteurs-img']) !!}
-                    @endforeach
-                </div>
-            @endif
-            @if($titreSecteurs())
-                <p class="block-hero__secteurs-titre">{!! $titreSecteurs() !!}</p>
-            @endif
-        </div>
-    @endif
 </section>
+
+@if($imagesSecteurs() || $titreSecteurs())
+  <div class="block-hero__secteurs">
+    @if($imagesSecteurs())
+      <div class="block-hero__secteurs-images">
+        @foreach($imagesSecteurs() as $imageId)
+          {!! wp_get_attachment_image($imageId, 'thumbnail', false, ['class' => 'block-hero__secteurs-img']) !!}
+        @endforeach
+      </div>
+    @endif
+    @if($titreSecteurs())
+      <p class="block-hero__secteurs-titre">{!! $titreSecteurs() !!}</p>
+    @endif
+  </div>
+@endif
