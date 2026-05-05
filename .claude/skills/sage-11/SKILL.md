@@ -989,7 +989,110 @@ addFilter('editor.BlockEdit', 'theme/mon-control', withMonControl);
 
 ---
 
-## 13. Troubleshooting
+## 13. JS frontend — animations et scroll (performance)
+
+### Anti-pattern à proscrire
+
+```js
+// ❌ getBoundingClientRect dans un scroll handler = layout reflow synchrone par frame
+window.addEventListener('scroll', () => {
+  const rect = el.getBoundingClientRect();
+  // ...
+}, { passive: true });
+```
+
+Même avec `passive: true`, lire la géométrie d'un élément force un reflow (~16ms+ sur pages complexes). Avant d'écrire un scroll handler, toujours évaluer `position: sticky` (CSS) puis `IntersectionObserver` (JS).
+
+### Widget qui suit le scroll et s'arrête au-dessus d'un autre élément
+
+`position: sticky` + DOM sibling — pas de JS scroll-time, le footer (ou élément suivant) pousse naturellement le widget vers le haut :
+
+```scss
+.block-hero__secteurs {
+  position: sticky;
+  bottom: 2rem;
+  margin-top: calc(-100px - 2rem); /* rentrer visuellement dans la zone du bloc précédent */
+  margin-bottom: 2rem;
+}
+```
+
+**Contraintes de markup :**
+- L'élément doit être **sibling** (pas enfant) du bloc dont il « suit la fin » — sinon `overflow: hidden` du parent clippe le sticky
+- Si Gutenberg ne permet pas le placement naturel dans le DOM, normaliser au runtime :
+  ```js
+  document.querySelector('main').appendChild(this.el);
+  ```
+
+### IntersectionObserver pour réagir à la position dans le viewport
+
+```js
+new IntersectionObserver(
+  ([entry]) => {
+    this.lastIntersecting = entry.isIntersecting;
+    this.sync();
+  },
+  { threshold: 0, rootMargin: '-95% 0px 0px 0px' }, // fire quand 95% du haut a scrollé
+).observe(this.target);
+```
+
+`rootMargin` règle finement le déclencheur. Off-main-thread, aucun coût scroll.
+
+### Resize debouncé + cache de mesures
+
+```js
+onResize() {
+  clearTimeout(this.resizeTimer);
+  this.resizeTimer = setTimeout(() => this.measure(), 150);
+}
+
+measure() {
+  if (this.isCollapsed) return; // garde la dernière mesure naturelle
+  this.naturalWidth = this.el.offsetWidth;
+}
+```
+
+Re-mesurer uniquement quand les dimensions sont représentatives.
+
+### Pattern sync — réconcilier état observé et exécution
+
+Quand un observer signale des changements pendant qu'une animation tourne, séparer **état désiré** et **exécution** :
+
+```js
+sync() {
+  if (this.isAnimating) return;
+  if (!this.lastIntersecting && !this.isCollapsed) this.collapse();
+  else if (this.lastIntersecting && this.isCollapsed) this.expand();
+}
+
+// L'observer alimente l'état
+observer.callback = ([entry]) => {
+  this.lastIntersecting = entry.isIntersecting;
+  this.sync();
+};
+
+// Les animations rappellent sync() en fin d'exécution
+animate(target, {
+  // ...
+  onComplete: () => {
+    this.isAnimating = false;
+    this.sync(); // réconcilie si l'état a changé pendant l'animation
+  },
+});
+```
+
+Évite les pertes d'état lors d'un scroll rapide (collapse/expand entrelacés).
+
+### Anime.js v4 — conventions du projet
+
+- Import : `import { animate, stagger } from 'animejs'`
+- Easings courants : `out(2)`, `out(3)`, `inOut(2)`, `outElastic(1, 0.5)`, `inOutElastic(0.1, 3)`
+- Stagger inversé : `stagger(40, { from: 'last' })`
+- Animations parallèles indépendantes : plusieurs `animate()` simultanés — pas besoin de timeline
+- `onComplete` fire après terminaison de tous les targets (stagger total inclus)
+
+---
+
+## 14. Troubleshooting
 
 ### Cache Acorn
 

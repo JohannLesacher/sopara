@@ -32,6 +32,7 @@
       @include('sections.footer')
     </div>
 
+    @svg('buttonIconMorph')
     @php(do_action('get_footer'))
     @php(wp_footer())
   </body>

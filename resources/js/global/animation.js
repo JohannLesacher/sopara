@@ -48,17 +48,17 @@ const buttonIconShapeAnimation = () => {
 
     button.addEventListener('mouseenter', () => {
       animate(path, {
-        d: svg.morphTo('#morphButtonIconShape path'),
+        d: svg.morphTo('#morphButtonIconShape path', 3),
         duration: 300,
-        ease: 'inOut(2)',
+        ease: 'inOutCirc',
       });
     });
 
     button.addEventListener('mouseleave', () => {
       animate(path, {
-        d: svg.morphTo(`#${originalId}`),
+        d: svg.morphTo(`#${originalId}`, 3),
         duration: 300,
-        ease: 'inOut(2)',
+        ease: 'inOutCirc',
       });
     });
   });

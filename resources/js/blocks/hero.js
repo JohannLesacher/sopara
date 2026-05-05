@@ -40,9 +40,8 @@ class HeroSecteurs {
   observeHero() {
     this.observer = new IntersectionObserver(
       ([entry]) => {
-        if (this.isAnimating) return;
-        if (!entry.isIntersecting && !this.isCollapsed) this.collapse();
-        else if (entry.isIntersecting && this.isCollapsed) this.expand();
+        this.lastIntersecting = entry.isIntersecting;
+        this.sync();
       },
       {
         threshold: 0,
@@ -50,6 +49,12 @@ class HeroSecteurs {
       },
     );
     this.observer.observe(this.hero);
+  }
+
+  sync() {
+    if (this.isAnimating) return;
+    if (!this.lastIntersecting && !this.isCollapsed) this.collapse();
+    else if (this.lastIntersecting && this.isCollapsed) this.expand();
   }
 
   animateEntry() {
@@ -97,6 +102,7 @@ class HeroSecteurs {
       onComplete: () => {
         this.isCollapsed = true;
         this.isAnimating = false;
+        this.sync();
       },
     });
   }
@@ -129,6 +135,7 @@ class HeroSecteurs {
         this.isCollapsed = false;
         this.isAnimating = false;
         this.measure();
+        this.sync();
       },
     });
   }
