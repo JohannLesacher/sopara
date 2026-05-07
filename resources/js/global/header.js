@@ -5,7 +5,7 @@ export const initHeader = () => {
 
   const CONFIG = {
     smart: true,
-    threshold: 100,
+    threshold: 0,
   };
 
   let lastScroll = 0;

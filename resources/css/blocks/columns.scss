@@ -1,0 +1,9 @@
+.wp-block-columns {
+  &.is-style-inverted-mobile {
+    @media screen and (max-width: 768px) {
+      > .wp-block-column:last-child {
+        order: -1;
+      }
+    }
+  }
+}

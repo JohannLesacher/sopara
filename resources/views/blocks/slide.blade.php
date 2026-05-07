@@ -1,3 +1,6 @@
-<li class="splide__slide block-slide">
-    {!! $content !!}
+<li
+  class="{{ implode(' ', $classeNames()) }}"
+  @if($animated()) data-animation="{{ $animationType() }}" @endif
+>
+  {!! $content !!}
 </li>

@@ -1092,7 +1092,225 @@ animate(target, {
 
 ---
 
-## 14. Troubleshooting
+## 14. Champs custom sur les éléments de menu (nav menu items)
+
+Quand on a besoin d'ajouter des options au menu WP (image, style de rendu, flag…), respecter la séparation Sage : **Service** + **Provider** + **Blade** + **JS séparé**. Jamais de HTML inline en PHP, jamais de jQuery, jamais d'`add_action` dans `app/filters.php` pour ce genre de feature.
+
+### Pattern
+
+```
+app/Services/NavMenuFields.php           # logique : enregistrer/afficher/sauver les champs
+app/Providers/NavMenuFieldsServiceProvider.php
+resources/views/admin/menu-fields.blade.php   # markup des champs (par item, par profondeur)
+resources/js/admin/menu-fields.js        # picker média natif (wp.media), pas de jQuery
+resources/css/admin/menu-fields.scss     # optionnel
+```
+
+### Service
+
+```php
+namespace App\Services;
+
+use function Roots\view;
+
+class NavMenuFields
+{
+    public const STYLES = [
+        'normal' => 'Normal',
+        'fleche' => 'Flèche',
+        'bouton' => 'Bouton',
+    ];
+
+    public function render(int $itemId, object $item, int $depth): void
+    {
+        echo view('admin.menu-fields', [
+            'itemId'   => $itemId,
+            'depth'    => $depth,
+            'imageId'  => (int) get_post_meta($itemId, '_menu_image', true),
+            'imageUrl' => $this->imageUrl($itemId),
+            'style'    => get_post_meta($itemId, '_menu_style', true) ?: 'normal',
+            'styles'   => self::STYLES,
+        ])->render();
+    }
+
+    public function save(int $menuId, int $itemId): void
+    {
+        if (isset($_POST['menu_item_image'][$itemId])) {
+            $id = (int) $_POST['menu_item_image'][$itemId];
+            $id > 0
+                ? update_post_meta($itemId, '_menu_image', $id)
+                : delete_post_meta($itemId, '_menu_image');
+        }
+
+        if (isset($_POST['menu_item_style'][$itemId])) {
+            $style = sanitize_key($_POST['menu_item_style'][$itemId]);
+            if (array_key_exists($style, self::STYLES)) {
+                update_post_meta($itemId, '_menu_style', $style);
+            }
+        }
+    }
+
+    public function enqueue(string $hook): void
+    {
+        if ($hook !== 'nav-menus.php') {
+            return;
+        }
+        wp_enqueue_media();
+        wp_enqueue_script('heat/menu-fields', \Illuminate\Support\Facades\Vite::asset('resources/js/admin/menu-fields.js'), [], null, true);
+    }
+
+    private function imageUrl(int $itemId): string
+    {
+        $id = (int) get_post_meta($itemId, '_menu_image', true);
+        return $id ? (wp_get_attachment_image_url($id, 'medium') ?: '') : '';
+    }
+}
+```
+
+### Provider
+
+```php
+namespace App\Providers;
+
+use App\Services\NavMenuFields;
+use Illuminate\Support\ServiceProvider;
+
+class NavMenuFieldsServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->singleton(NavMenuFields::class, fn() => new NavMenuFields());
+    }
+
+    public function boot(NavMenuFields $service): void
+    {
+        // Signature WP : ($item_id, $item, $depth, $args, $id)
+        add_action('wp_nav_menu_item_custom_fields', [$service, 'render'], 10, 3);
+        add_action('wp_update_nav_menu_item', [$service, 'save'], 10, 2);
+        add_action('admin_enqueue_scripts', [$service, 'enqueue']);
+    }
+}
+```
+
+### Blade — `resources/views/admin/menu-fields.blade.php`
+
+Le scoping par profondeur se fait **ici**, dans la vue, pas par un `if` éparpillé. `$depth === 0` = niveau 1 (top), `$depth === 1` = niveau 2.
+
+```blade
+@if($depth === 0)
+    <p class="field-menu-image description description-wide">
+        <label>
+            <strong>Image (megamenu)</strong>
+            <input type="hidden" class="menu-item-image-id"
+                   name="menu_item_image[{{ $itemId }}]"
+                   value="{{ $imageId ?: '' }}">
+            <span class="menu-item-image-preview">
+                @if($imageUrl)
+                    <img src="{!! $imageUrl !!}" style="max-width:80px;height:auto;display:block;">
+                @endif
+            </span>
+            <button type="button" class="button menu-item-image-select">Choisir</button>
+            <button type="button" class="button menu-item-image-remove" @if(!$imageId) hidden @endif>Retirer</button>
+        </label>
+    </p>
+@endif
+
+@if($depth === 1)
+    <p class="field-menu-style description description-wide">
+        <label>
+            <strong>Style de colonne</strong>
+            <select name="menu_item_style[{{ $itemId }}]">
+                @foreach($styles as $key => $label)
+                    <option value="{!! $key !!}" @selected($style === $key)>{!! $label !!}</option>
+                @endforeach
+            </select>
+        </label>
+    </p>
+@endif
+```
+
+### JS admin — `resources/js/admin/menu-fields.js`
+
+Pas de jQuery. `wp.media` est exposé globalement par `wp_enqueue_media()`.
+
+```js
+document.addEventListener('click', (e) => {
+  const select = e.target.closest('.menu-item-image-select');
+  const remove = e.target.closest('.menu-item-image-remove');
+
+  if (select) {
+    e.preventDefault();
+    const wrap = select.closest('label');
+    const input = wrap.querySelector('.menu-item-image-id');
+    const preview = wrap.querySelector('.menu-item-image-preview');
+    const removeBtn = wrap.querySelector('.menu-item-image-remove');
+
+    const frame = window.wp.media({
+      title: 'Sélectionner une image',
+      multiple: false,
+      library: { type: 'image' },
+    });
+
+    frame.on('select', () => {
+      const att = frame.state().get('selection').first().toJSON();
+      const url = att.sizes?.medium?.url || att.url;
+      input.value = att.id;
+      preview.innerHTML = `<img src="${url}" style="max-width:80px;height:auto;display:block;">`;
+      removeBtn.hidden = false;
+    });
+
+    frame.open();
+  }
+
+  if (remove) {
+    e.preventDefault();
+    const wrap = remove.closest('label');
+    wrap.querySelector('.menu-item-image-id').value = '';
+    wrap.querySelector('.menu-item-image-preview').innerHTML = '';
+    remove.hidden = true;
+  }
+});
+```
+
+### Vite — déclarer l'entry admin
+
+Si `resources/js/admin/*.js` n'est pas déjà scanné par un glob, l'ajouter explicitement dans `vite.config.js` ou via un glob :
+
+```js
+input: [
+  // ...
+  ...globSync('resources/js/admin/*.js'),
+],
+```
+
+### Récupération côté front (View Composer)
+
+```php
+private function decorate(array $items): array
+{
+    foreach ($items as $item) {
+        $imageId = (int) get_post_meta($item->id, '_menu_image', true);
+        $item->image = $imageId ? wp_get_attachment_image_url($imageId, 'large') : '';
+        $item->style = get_post_meta($item->id, '_menu_style', true) ?: 'normal';
+
+        if (!empty($item->children)) {
+            $item->children = $this->decorate($item->children);
+        }
+    }
+    return $items;
+}
+```
+
+### Règles à respecter
+
+- Le scoping par niveau hiérarchique (top vs niveau 2 vs niveau N) se gère dans la **vue Blade** via `$depth`, pas en stockant les champs partout puis en filtrant côté front.
+- Ne **jamais** mélanger PHP procédural et HTML : tout markup admin passe par une vue Blade dédiée, même quand WP attend un `echo` direct dans un hook.
+- Ne **jamais** utiliser jQuery ni `wp_add_inline_script('jquery-core', ...)`. Vanilla JS + `wp.media` couvrent tous les besoins.
+- Le Provider est enregistré dans `functions.php` via `withProviders([...])`, pas via `app/filters.php`.
+
+---
+
+## 15. Troubleshooting
 
 ### Cache Acorn
 

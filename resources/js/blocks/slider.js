@@ -30,8 +30,14 @@ class Slider {
         speed: 600,
         easing: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
         breakpoints: {
-          1024: { perPage: Math.max(1, perPage - 1) },
-          640: { perPage: Math.max(1, perPage - 2) },
+          1024: {
+            perPage: Math.max(1, perPage - 1),
+            padding: { left: slidePadding, right: slidePadding * 2 }
+          },
+          640: {
+            perPage: Math.max(1, perPage - 2),
+            padding: { left: slidePadding, right: slidePadding * 3 }
+          },
         },
         ...(autoplay && {
           intersection: {

@@ -1,0 +1,29 @@
+.wp-block-group {
+  &.is-style-5-columns-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  }
+
+  &.is-style-horizontal-mobile {
+    @media screen and (max-width: 768px) {
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: nowrap;
+    }
+  }
+
+  &.is-style-align-start-mobile {
+    @media screen and (max-width: 768px) {
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-grow: 1;
+      gap: 1.5rem;
+
+      > * {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  }
+}

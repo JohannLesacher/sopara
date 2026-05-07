@@ -1,30 +1,80 @@
-import {animate, svg} from 'animejs';
+import { animate, stagger, svg } from 'animejs';
+
+const ANIMATIONS = {
+  'fade': {
+    opacity: [0, 1],
+  },
+  'fade-up': {
+    opacity: [0, 1],
+    translateY: [24, 0],
+  },
+  'fade-left': {
+    opacity: [0, 1],
+    translateX: [-24, 0],
+  },
+  'fade-right': {
+    opacity: [0, 1],
+    translateX: [24, 0],
+  },
+  'scale': {
+    opacity: [0, 1],
+    scale: [0.95, 1],
+  },
+};
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 document.addEventListener('DOMContentLoaded', () => {
-  const observerOptions = {
-    rootMargin: '0px 0px -50px 0px',
-    threshold: 0.1
-  };
+  const elements = document.querySelectorAll('.is-animated');
+  if (!elements.length) return;
 
-  let visibleIndex = 0;
-  const stagger = 150;
+  if (prefersReducedMotion) {
+    elements.forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+
+  let pendingBatch = [];
+  let flushTimer = null;
+
+  const flush = () => {
+    if (!pendingBatch.length) return;
+
+    const batch = pendingBatch;
+    pendingBatch = [];
+    flushTimer = null;
+
+    const groups = batch.reduce((acc, el) => {
+      const type = el.dataset.animation || 'fade-up';
+      (acc[type] ||= []).push(el);
+      return acc;
+    }, {});
+
+    Object.entries(groups).forEach(([type, els]) => {
+      const params = ANIMATIONS[type] || ANIMATIONS['fade-up'];
+      animate(els, {
+        ...params,
+        duration: 700,
+        delay: stagger(120),
+        ease: 'out(3)',
+      });
+    });
+  };
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const delay = visibleIndex * stagger;
-        visibleIndex++;
-
-        setTimeout(() => {
-          entry.target.classList.add('is-visible');
-        }, delay);
-
-        observer.unobserve(entry.target);
-      }
+      if (!entry.isIntersecting) return;
+      pendingBatch.push(entry.target);
+      observer.unobserve(entry.target);
     });
-  }, observerOptions);
 
-  document.querySelectorAll('.is-animated').forEach(el => observer.observe(el));
+    clearTimeout(flushTimer);
+    flushTimer = setTimeout(flush, 50);
+  }, {
+    rootMargin: '0px 0px -50px 0px',
+    threshold: 0.1,
+  });
+
+  elements.forEach(el => observer.observe(el));
 });
 
 /* Button Icon Animation */

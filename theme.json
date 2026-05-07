@@ -145,19 +145,28 @@
           "name": "Medium",
           "slug": "medium",
           "size": "1.125rem",
-          "fluid": false
+          "fluid": {
+            "min": "0.875rem",
+            "max": "1.125rem"
+          }
         },
         {
           "name": "Large",
           "slug": "large",
           "size": "1.25rem",
-          "fluid": false
+          "fluid": {
+            "min": "1rem",
+            "max": "1.25rem"
+          }
         },
         {
           "name": "Tagline",
           "slug": "tagline",
           "size": "1rem",
-          "fluid": false
+          "fluid": {
+            "min": "0.75rem",
+            "max": "1rem"
+          }
         },
         {
           "name": "Heading 6",

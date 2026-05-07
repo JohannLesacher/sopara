@@ -9,8 +9,11 @@ registerBlockType('sur-mesure/slide', {
   parent: ['sur-mesure/slider'],
   attributes: {},
 
-  edit: () => {
-    const blockProps = useBlockProps({ className: 'editor-slide' });
+  edit: ({attributes}) => {
+    const className = ['editor-slide', attributes.animateOnScroll && 'is-animated']
+      .filter(Boolean)
+      .join(' ');
+    const blockProps = useBlockProps({ className });
     return el('div', blockProps, el(InnerBlocks, {}));
   },
 

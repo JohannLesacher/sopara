@@ -7,6 +7,14 @@ $color-pairs: (
   'secondary-2': 'secondary-3',
 );
 
+.wp-block-buttons {
+  &.is-style-centered-mobile {
+    @media screen and (max-width: 768px) {
+      justify-content: center;
+    }
+  }
+}
+
 .wp-block-button {
   &.is-style-with-icon.has-icon-left &__link,
   &.is-style-border-with-icon.has-icon-left &__link {
