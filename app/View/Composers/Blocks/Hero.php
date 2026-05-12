@@ -26,20 +26,30 @@ class Hero extends Composer
         return $src ? $src[0] : '';
     }
 
+    public function imageFixe(): bool
+    {
+        return ! empty($this->data()['image_fixe']);
+    }
+
+    public function imageFondSources(): array
+    {
+        $id = (int) ($this->data()['image_fond'] ?? 0);
+        if (! $id) {
+            return [];
+        }
+        $sources = [];
+        foreach (['medium_large', 'large', 'very-large'] as $size) {
+            $src = wp_get_attachment_image_src($id, $size);
+            if ($src) {
+                $sources[$size] = $src[0];
+            }
+        }
+
+        return $sources;
+    }
+
     public function titre(): string
     {
         return nl2br($this->data()['titre'] ?? '', false);
-    }
-
-    public function titreSecteurs(): string
-    {
-        return $this->data()['titre_secteurs'] ?? '';
-    }
-
-    public function imagesSecteurs(): array
-    {
-        $ids = $this->data()['images_secteurs'] ?? [];
-
-        return is_array($ids) ? array_values(array_filter($ids)) : [];
     }
 }

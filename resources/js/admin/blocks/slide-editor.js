@@ -3,6 +3,7 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 import { createElement as el } from '@wordpress/element';
 
 registerBlockType('sur-mesure/slide', {
+  apiVersion: 3,
   title: 'Slide',
   category: 'sur-mesure',
   icon: 'media-interactive',

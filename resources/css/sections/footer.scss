@@ -5,14 +5,38 @@
   color: var(--wp--preset--color--white);
 
   &__main {
-    padding: 4rem 2rem 5rem;
+    padding: 4rem 0 1rem;
+
+    @media screen and (min-width: 1024px) {
+      padding: 4rem 2rem 5rem;
+    }
   }
 
   &__top {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 4rem;
+    align-items: stretch;
+    gap: 2rem;
+
+    .site-footer__address,
+    .site-footer__contact,
+    .site-footer__slogan {
+      justify-content: center;
+      text-align: center;
+    }
+
+    @media screen and (min-width: 1024px) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 4rem;
+
+      .site-footer__address,
+      .site-footer__contact,
+      .site-footer__slogan {
+        display: none;
+      }
+    }
   }
 
   &__brand {
@@ -23,17 +47,30 @@
   }
 
   &__logo {
-    height: 95px;
-    width: auto;
     display: block;
+
+    @media screen and (min-width: 1024px) {
+      height: 95px;
+      width: auto;
+    }
   }
 
   &__navs {
     display: flex;
-    gap: 4rem;
-    align-items: flex-start;
+    gap: 1rem;
+    justify-content: center;
     flex: 1;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    @media screen and (min-width: 1024px) {
+      justify-content: flex-end;
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+      gap: 4rem;
+    }
   }
 
   &__nav {
@@ -56,9 +93,13 @@
 
   &__social {
     display: flex;
-    flex-direction: column;
     gap: 1.25rem;
     align-items: center;
+    flex-direction: row;
+
+    @media screen and (min-width: 1024px) {
+      flex-direction: column;
+    }
   }
 
   &__social-link {
@@ -76,11 +117,15 @@
   }
 
   &__info {
-    display: grid;
+    display: none;
     grid-template-columns: 1fr 1fr 2fr;
     gap: 2rem;
     padding-top: 4rem;
     align-items: start;
+
+    @media screen and (min-width: 1024px) {
+      display: grid;
+    }
   }
 
   &__address,
@@ -130,10 +175,15 @@
   &__legal {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 2rem;
     padding: 1.25rem 2rem;
     max-width: 100%;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+
+    @media screen and (min-width: 1024px) {
+      flex-direction: row;
+    }
   }
 
   &__copyright {
@@ -145,9 +195,14 @@
   &__legal-nav {
     display: flex;
     align-items: center;
-    gap: 2rem;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: center;
+    gap: 1rem;
+
+    @media screen and (min-width: 1024px) {
+      justify-content: flex-end;
+      gap: 2rem;
+    }
 
     a {
       font-size: 0.875rem;
@@ -160,58 +215,6 @@
       &.is-active {
         color: var(--wp--preset--color--secondary-3);
       }
-    }
-  }
-
-  @media (max-width: 1024px) {
-    &__top {
-      flex-direction: column;
-      gap: 2.5rem;
-    }
-
-    &__navs {
-      justify-content: flex-start;
-      flex-wrap: wrap;
-      gap: 2rem;
-    }
-
-    &__social {
-      flex-direction: row;
-    }
-
-    &__info {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    &__slogan {
-      grid-column: 1 / -1;
-      text-align: left;
-    }
-  }
-
-  @media (max-width: 640px) {
-    &__main {
-      padding: 3rem 1.25rem 2rem;
-    }
-
-    &__info {
-      grid-template-columns: 1fr;
-    }
-
-    &__slogan {
-      text-align: left;
-    }
-
-    &__legal {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1.25rem;
-    }
-
-    &__legal-nav {
-      justify-content: flex-start;
-      gap: 1rem;
     }
   }
 }

@@ -8,9 +8,29 @@ $color-pairs: (
 );
 
 .wp-block-buttons {
+  .wp-block-button__link {
+    width: max-content;
+  }
+
   &.is-style-centered-mobile {
     @media screen and (max-width: 768px) {
       justify-content: center;
+
+      &.is-vertical {
+        align-items: center;
+        justify-content: initial;
+      }
+    }
+  }
+
+  &.is-style-left-mobile {
+    @media screen and (max-width: 768px) {
+      justify-content: flex-start;
+
+      &.is-vertical {
+        align-items: flex-start;
+        justify-content: initial;
+      }
     }
   }
 }
@@ -30,6 +50,7 @@ $color-pairs: (
     display: flex;
     align-items: center;
     gap: 1ch;
+    width: max-content;
     padding: 0.5rem 1.5rem;
     white-space: nowrap;
     transition: all 150ms ease-in;

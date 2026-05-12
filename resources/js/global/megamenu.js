@@ -18,10 +18,32 @@ export const initMegamenu = () => {
   let activeAnimations = []; // Suivi de TOUTES les animations en cours
   let isOpen = false;
 
+  const updateContainerTop = () => {
+    if (banner.classList.contains('is-menu-open')) {
+      const headerHeight =
+        parseFloat(
+          getComputedStyle(banner).getPropertyValue('--header-height'),
+        ) || 0;
+      const nav = banner.querySelector('.banner__nav--left');
+      const navHeight = nav ? nav.offsetHeight : 0;
+      container.style.top = `${headerHeight + navHeight}px`;
+    } else {
+      container.style.top = '';
+    }
+  };
+
   const escapeHtml = (str = '') =>
-    String(str).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
+    String(str).replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[c],
+    );
 
   const parseChildren = (raw) => {
     try {
@@ -47,16 +69,20 @@ export const initMegamenu = () => {
          </div>`
       : '';
 
-    const renderItems = (items) => items.map(item => {
-      const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-      return `
+    const renderItems = (items) =>
+      items
+        .map((item) => {
+          const hasChildren =
+            Array.isArray(item.children) && item.children.length > 0;
+          return `
       <li class="megamenu-container__item megamenu-container__item--${escapeHtml(item.megamenu_style || 'classique')}">
         ${item.megamenu_style !== 'invisible' ? `<a href="${escapeHtml(item.url)}">${escapeHtml(item.label)}</a>` : ''}
         ${item.megamenu_style === 'bouton' ? `<a href="${escapeHtml(item.url)}" class="megamenu-container__item__button">${escapeHtml(item.megamenu_bouton)}</a>` : ''}
         ${hasChildren ? `<ul class="megamenu-container__sublist">${renderItems(item.children)}</ul>` : ''}
       </li>
     `;
-    }).join('');
+        })
+        .join('');
 
     const itemsHtml = renderItems(children);
 
@@ -72,7 +98,7 @@ export const initMegamenu = () => {
   };
 
   const cancelCurrent = () => {
-    activeAnimations.forEach(anim => anim.pause());
+    activeAnimations.forEach((anim) => anim.pause());
     activeAnimations = [];
   };
 
@@ -84,17 +110,20 @@ export const initMegamenu = () => {
   const animateItemsIn = (wrapper) => {
     const items = wrapper.querySelectorAll('.megamenu-container__item');
     if (!items.length) return;
-    registerAnim(animate(items, {
-      opacity: [0, 1],
-      translateY: [12, 0],
-      delay: (_, i) => i * 30,
-      duration: 320,
-      ease: eases.outQuad,
-    }));
+    registerAnim(
+      animate(items, {
+        opacity: [0, 1],
+        translateY: [12, 0],
+        delay: (_, i) => i * 30,
+        duration: 320,
+        ease: eases.outQuad,
+      }),
+    );
   };
 
   const open = (trigger) => {
     cancelCurrent();
+    updateContainerTop();
 
     if (banner) banner.classList.add('has-megamenu-active');
 
@@ -111,11 +140,13 @@ export const initMegamenu = () => {
     trigger.setAttribute('aria-expanded', 'true');
 
     // On utilise la valeur cible (1) pour permettre une reprise fluide si l'animation de fermeture a été interrompue
-    registerAnim(animate(container, {
-      opacity: 1,
-      duration: OPEN_DURATION,
-      ease: eases.outQuad,
-    }));
+    registerAnim(
+      animate(container, {
+        opacity: 1,
+        duration: OPEN_DURATION,
+        ease: eases.outQuad,
+      }),
+    );
 
     animateItemsIn(wrapper);
     isOpen = true;
@@ -123,6 +154,7 @@ export const initMegamenu = () => {
 
   const swap = (trigger) => {
     cancelCurrent();
+    updateContainerTop();
     const oldWrappers = Array.from(container.children);
     const newWrapper = buildContent(trigger).cloneNode(true);
 
@@ -144,7 +176,7 @@ export const initMegamenu = () => {
       onComplete: () => {
         container.style.height = '';
         container.style.transform = '';
-      }
+      },
     };
 
     if (Math.abs(newHeight - oldHeight) > 2) {
@@ -153,51 +185,56 @@ export const initMegamenu = () => {
 
     registerAnim(animate(container, containerAnimProps));
 
-    oldWrappers.forEach(oldWrapper => {
-      registerAnim(animate(oldWrapper, {
-        opacity: 0,
-        duration: SWAP_DURATION,
-        ease: eases.outQuad,
-        onComplete: () => oldWrapper.remove()
-      }));
+    oldWrappers.forEach((oldWrapper) => {
+      registerAnim(
+        animate(oldWrapper, {
+          opacity: 0,
+          duration: SWAP_DURATION,
+          ease: eases.outQuad,
+          onComplete: () => oldWrapper.remove(),
+        }),
+      );
     });
 
-    registerAnim(animate(newWrapper, {
-      opacity: 1,
-      duration: SWAP_DURATION,
-      ease: eases.outQuad,
-      onComplete: () => {
-        newWrapper.style.position = '';
-        newWrapper.style.inset = '';
-      }
-    }));
+    registerAnim(
+      animate(newWrapper, {
+        opacity: 1,
+        duration: SWAP_DURATION,
+        ease: eases.outQuad,
+        onComplete: () => {
+          newWrapper.style.position = '';
+          newWrapper.style.inset = '';
+        },
+      }),
+    );
 
     animateItemsIn(newWrapper);
   };
 
   const close = () => {
-    return
-
     cancelCurrent();
+    triggers.forEach((t) => t.classList.remove('is-active'));
     if (activeTrigger) {
       activeTrigger.setAttribute('aria-expanded', 'false');
     }
 
-    registerAnim(animate(container, {
-      opacity: 0,
-      duration: CLOSE_DURATION,
-      ease: eases.outQuad,
-      onComplete: () => {
-        container.classList.remove('is-active');
-        container.setAttribute('aria-hidden', 'true');
-        container.replaceChildren();
-        container.style.height = '';
-        container.style.opacity = '';
-        container.style.transform = '';
+    registerAnim(
+      animate(container, {
+        opacity: 0,
+        duration: CLOSE_DURATION,
+        ease: eases.outQuad,
+        onComplete: () => {
+          container.classList.remove('is-active');
+          container.setAttribute('aria-hidden', 'true');
+          container.replaceChildren();
+          container.style.height = '';
+          container.style.opacity = '';
+          container.style.transform = '';
 
-        if (banner) banner.classList.remove('has-megamenu-active');
-      }
-    }));
+          if (banner) banner.classList.remove('has-megamenu-active');
+        },
+      }),
+    );
 
     activeTrigger = null;
     isOpen = false;
@@ -213,7 +250,7 @@ export const initMegamenu = () => {
     closeTimer = null;
   };
 
-  triggers.forEach(trigger => {
+  triggers.forEach((trigger) => {
     trigger.setAttribute('aria-expanded', 'false');
 
     trigger.addEventListener('mouseenter', () => {
@@ -235,6 +272,27 @@ export const initMegamenu = () => {
       if (!container.contains(e.relatedTarget)) scheduleClose();
     });
 
+    trigger.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link && trigger.contains(link)) e.preventDefault();
+
+      cancelClose();
+      if (activeTrigger === trigger && isOpen) return;
+
+      triggers.forEach((t) => t.classList.remove('is-active'));
+      trigger.classList.add('is-active');
+
+      if (isOpen && activeTrigger) {
+        activeTrigger.setAttribute('aria-expanded', 'false');
+        activeTrigger = trigger;
+        swap(trigger);
+        trigger.setAttribute('aria-expanded', 'true');
+      } else {
+        activeTrigger = trigger;
+        open(trigger);
+      }
+    });
+
     trigger.addEventListener('focus', () => {
       cancelClose();
       if (activeTrigger !== trigger) {
@@ -246,8 +304,23 @@ export const initMegamenu = () => {
 
   container.addEventListener('mouseenter', cancelClose);
   container.addEventListener('mouseleave', (e) => {
-    const movingToTrigger = Array.from(triggers).some(t => t.contains(e.relatedTarget));
+    const movingToTrigger = Array.from(triggers).some((t) =>
+      t.contains(e.relatedTarget),
+    );
     if (!movingToTrigger) scheduleClose();
+  });
+
+  window.addEventListener('resize', updateContainerTop, { passive: true });
+
+  let wasMenuOpen = banner.classList.contains('is-menu-open');
+  new MutationObserver(() => {
+    const isMenuOpen = banner.classList.contains('is-menu-open');
+    if (wasMenuOpen && !isMenuOpen && isOpen) close();
+    wasMenuOpen = isMenuOpen;
+    updateContainerTop();
+  }).observe(banner, {
+    attributes: true,
+    attributeFilter: ['class'],
   });
 
   document.addEventListener('keydown', (e) => {
@@ -256,6 +329,4 @@ export const initMegamenu = () => {
       activeTrigger?.focus();
     }
   });
-
-  open(triggers[0]);
 };

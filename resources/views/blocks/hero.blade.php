@@ -1,6 +1,16 @@
 <section class="block-hero {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}">
     @if($imageFond())
-        <img class="block-hero__bg" src="{!! $imageFond() !!}" alt="" aria-hidden="true" loading="eager">
+        @if($imageFixe())
+            @php
+                $sources = $imageFondSources();
+                $styleVars = collect($sources)
+                    ->map(fn($url, $size) => "--bg-{$size}:url('{$url}')")
+                    ->implode(';');
+            @endphp
+            <div class="block-hero__bg block-hero__bg--fixed" style="{!! $styleVars !!}" aria-hidden="true"></div>
+        @else
+            <img class="block-hero__bg" src="{!! $imageFond() !!}" alt="" aria-hidden="true" loading="eager">
+        @endif
     @elseif($is_preview)
         <div class="block-hero__bg block-hero__bg--placeholder"></div>
     @endif
@@ -17,18 +27,3 @@
         </div>
     </div>
 </section>
-
-@if($imagesSecteurs() || $titreSecteurs())
-  <div class="block-hero__secteurs">
-    @if($imagesSecteurs())
-      <div class="block-hero__secteurs-images">
-        @foreach($imagesSecteurs() as $imageId)
-          {!! wp_get_attachment_image($imageId, 'thumbnail', false, ['class' => 'block-hero__secteurs-img']) !!}
-        @endforeach
-      </div>
-    @endif
-    @if($titreSecteurs())
-      <p class="block-hero__secteurs-titre">{!! $titreSecteurs() !!}</p>
-    @endif
-  </div>
-@endif

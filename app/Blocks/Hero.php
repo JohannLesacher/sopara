@@ -5,46 +5,44 @@ namespace App\Blocks;
 use App\Services\BlockEngine;
 use Illuminate\Support\Facades\Vite;
 
-class Hero extends BlockEngine {
-    public static function register_block( $meta_boxes ) {
+class Hero extends BlockEngine
+{
+    public static function register_block($meta_boxes)
+    {
         $meta_boxes[] = [
-            'title'           => 'Hero',
-            'id'              => 'hero',
-            'type'            => 'block',
-            'category'        => 'sur-mesure',
-            'context'         => 'normal',
-            'icon'            => 'admin-generic',
-            'render_callback' => [ parent::class, 'renderBlock' ],
-            'enqueue_assets'  => function () {
-                wp_enqueue_style( 'hero', Vite::asset( 'resources/css/blocks/hero.scss' ), [], null );
+            'title' => 'Hero',
+            'id' => 'hero',
+            'type' => 'block',
+            'category' => 'sur-mesure',
+            'context' => 'normal',
+            'icon' => 'admin-generic',
+            'render_callback' => [parent::class, 'renderBlock'],
+            'enqueue_assets' => function () {
+                wp_enqueue_style('hero', Vite::asset('resources/css/blocks/hero.scss'), [], null);
             },
-            'supports'        => [
-                'align'           => true,
-                'anchor'          => true,
+            'supports' => [
+                'align' => true,
+                'anchor' => true,
                 'customClassName' => true,
-                'reusable'        => true,
+                'reusable' => true,
             ],
-            'fields'          => [
+            'fields' => [
                 [
-                    'id'   => 'image_fond',
+                    'id' => 'image_fond',
                     'name' => 'Image de fond',
                     'type' => 'single_image',
                 ],
                 [
-                    'id'   => 'titre',
+                    'id' => 'image_fixe',
+                    'name' => 'Image fixe',
+                    'desc' => 'Affiche l\'image de fond en background-attachment: fixed',
+                    'type' => 'switch',
+                    'std' => 0,
+                ],
+                [
+                    'id' => 'titre',
                     'name' => 'Grand titre',
                     'type' => 'textarea',
-                ],
-                [
-                    'id'   => 'titre_secteurs',
-                    'name' => "Titre — Secteurs d'activité",
-                    'type' => 'text',
-                ],
-                [
-                    'id'               => 'images_secteurs',
-                    'name'             => "Images — Secteurs d'activité",
-                    'type'             => 'image_advanced',
-                    'max_file_uploads' => 6,
                 ],
             ],
         ];

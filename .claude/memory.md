@@ -43,6 +43,10 @@
 - **Block template path convention**: `BlockEngine::renderBlock()` resolves view as `blocks.{block-id}` (e.g. `blocks.card` → `resources/views/blocks/card.blade.php`)
 - **InnerBlocks over wysiwyg**: for any free-form editorial content in a block, always use `<InnerBlocks />` — never `wysiwyg` MetaBox field. CTA uses separate `text` + `url` fields.
 - **Floating UI panel in a block**: un élément visuellement indépendant du flux de contenu (ex. secteurs d'activité dans le hero) utilise `position: absolute` sur le parent `.block-*` (`position: relative`) avec des offsets identiques sur deux côtés (ex. `bottom: Xpx; right: Xpx`) pour l'ancrer sans perturber l'alignement des zones de contenu.
+- **Shared scroll listener util** (`resources/js/global/scroll.js`): un seul `scroll` listener global avec rAF + `Set` de callbacks et dedupe `lastY`. Modules (`header.js`, `secteurs.js`) consomment via `onScroll(fn)`. Évite duplication des handlers et respecte la sensibilité perf de l'utilisateur.
+- **Decoupling cross-block UI via theme settings**: pour un fragment UI partagé entre pages (ex. secteurs jadis dans Hero), déplacer le contenu dans `ThemeSettings` (i18n par langue) + toggle `display_*` en page meta (`PostTypes/Page.php`) + composer dédié + partial inclus dans `content-page.blade.php`. Le bloc d'origine ne porte plus la donnée.
+- **MB Settings tabs by language**: pour une page de settings multilingue, déclarer `tabs` sur la page (`['fr' => 'FR', ..., 'global' => 'Global']`) + `tab_style => 'left'`, et assigner `'tab' => $lang` sur chaque meta box. Onglet `global` pour champs non-i18n (réseaux sociaux, images partagées). Scale à N langues sans alourdir l'UI.
+- **Sticky element placement**: ne pas déplacer un élément `position: sticky` par JS après le premier enfant d'un grid parent — casse le containing block du sticky. Laisser l'élément en fin de container (rendu via Blade), `bottom: Xrem` suffit à le faire flotter visuellement en bas du premier bloc tant que le container reste visible.
 
 ## Recurring errors to avoid
 

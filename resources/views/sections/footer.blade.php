@@ -6,6 +6,25 @@
              class="site-footer__logo">
       </div>
 
+      @if($contact['address'])
+        <div class="site-footer__address">
+          <strong>{!! pll__('Adresse :') !!}</strong>
+          <p>{!! nl2br(esc_html($contact['address'])) !!}</p>
+        </div>
+      @endif
+
+      @if($contact['phone'] || $contact['email'])
+        <div class="site-footer__contact">
+          <strong>{!! pll__('Contact :') !!}</strong>
+          @if($contact['phone'])
+            <a href="tel:{!! preg_replace('/\s+/', '', $contact['phone']) !!}">{!! $contact['phone'] !!}</a>
+          @endif
+          @if($contact['email'])
+            <a href="mailto:{!! $contact['email'] !!}">{!! $contact['email'] !!}</a>
+          @endif
+        </div>
+      @endif
+
       <div class="site-footer__navs">
         @if($nav['left'])
           <nav class="site-footer__nav">
@@ -53,6 +72,10 @@
           @endif
         </div>
       </div>
+
+      @if($branding['slogan'])
+        <p class="site-footer__slogan">{!! $branding['slogan'] !!}</p>
+      @endif
     </div>
 
     <div class="site-footer__info">

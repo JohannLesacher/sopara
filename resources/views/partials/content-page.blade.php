@@ -5,3 +5,5 @@
     {!! $pagination !!}
   </nav>
 @endif
+
+@include('partials.secteurs')

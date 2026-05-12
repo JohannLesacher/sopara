@@ -8,11 +8,14 @@ import { createElement as el, Fragment } from '@wordpress/element';
 import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
 
 registerBlockType('sur-mesure/slider', {
+  apiVersion: 3,
   title: 'Slider',
   category: 'sur-mesure',
   icon: 'slides',
   attributes: {
     perPage: { type: 'number', default: 3 },
+    perPageTablet: { type: 'number' },
+    perPageMobile: { type: 'number' },
     loop: { type: 'boolean', default: false },
     autoplay: { type: 'boolean', default: false },
   },
@@ -32,9 +35,25 @@ registerBlockType('sur-mesure/slider', {
           PanelBody,
           { title: 'Disposition', initialOpen: true },
           el(RangeControl, {
-            label: 'Slides par page',
+            label: 'Slides par page (desktop)',
             value: attributes.perPage,
             onChange: (val) => setAttributes({ perPage: val }),
+            min: 1,
+            max: 6,
+          }),
+          el(RangeControl, {
+            label: 'Slides par page (tablette ≤1024px)',
+            value:
+              attributes.perPageTablet ?? Math.max(1, attributes.perPage - 1),
+            onChange: (val) => setAttributes({ perPageTablet: val }),
+            min: 1,
+            max: 6,
+          }),
+          el(RangeControl, {
+            label: 'Slides par page (mobile ≤640px)',
+            value:
+              attributes.perPageMobile ?? Math.max(1, attributes.perPage - 2),
+            onChange: (val) => setAttributes({ perPageMobile: val }),
             min: 1,
             max: 6,
           }),

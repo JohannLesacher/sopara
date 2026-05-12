@@ -7,12 +7,20 @@ class ThemeSettings
     public function registerSettingsPage(): void
     {
         add_filter('mb_settings_pages', function (array $pages): array {
+            $tabs = [];
+            foreach ($this->languages() as $lang) {
+                $tabs[$lang] = strtoupper($lang);
+            }
+            $tabs['global'] = 'Global';
+
             $pages[] = [
                 'id' => 'theme-settings',
                 'option_name' => 'theme_settings',
                 'menu_title' => 'Réglages du thème',
                 'icon_url' => 'dashicons-admin-appearance',
                 'position' => 60,
+                'tabs' => $tabs,
+                'tab_style' => 'left',
             ];
 
             return $pages;
@@ -22,23 +30,50 @@ class ThemeSettings
     public function registerFields(): void
     {
         add_filter('rwmb_meta_boxes', function (array $meta_boxes): array {
-            $languages = function_exists('pll_languages_list')
-                ? pll_languages_list(['fields' => 'slug'])
-                : ['fr'];
-
-            foreach ($languages as $lang) {
+            foreach ($this->languages() as $lang) {
                 $meta_boxes[] = [
-                    'title' => 'Footer — '.strtoupper($lang),
+                    'title' => 'Footer',
                     'id' => 'theme-settings-footer-'.$lang,
                     'settings_pages' => 'theme-settings',
+                    'tab' => $lang,
                     'fields' => $this->footerFields($lang),
                 ];
+
+                $meta_boxes[] = [
+                    'title' => 'Secteurs d\'activité',
+                    'id' => 'theme-settings-secteurs-'.$lang,
+                    'settings_pages' => 'theme-settings',
+                    'tab' => $lang,
+                    'fields' => [
+                        [
+                            'id' => "titre_secteurs_{$lang}",
+                            'name' => 'Titre',
+                            'type' => 'text',
+                        ],
+                    ],
+                ];
             }
+
+            $meta_boxes[] = [
+                'title' => 'Secteurs d\'activité — Images',
+                'id' => 'theme-settings-secteurs-images',
+                'settings_pages' => 'theme-settings',
+                'tab' => 'global',
+                'fields' => [
+                    [
+                        'id' => 'images_secteurs',
+                        'name' => 'Images',
+                        'type' => 'image_advanced',
+                        'max_file_uploads' => 6,
+                    ],
+                ],
+            ];
 
             $meta_boxes[] = [
                 'title' => 'Réseaux sociaux',
                 'id' => 'theme-settings-social',
                 'settings_pages' => 'theme-settings',
+                'tab' => 'global',
                 'fields' => [
                     [
                         'id' => 'footer_social_x',
@@ -60,6 +95,13 @@ class ThemeSettings
 
             return $meta_boxes;
         });
+    }
+
+    private function languages(): array
+    {
+        return function_exists('pll_languages_list')
+            ? pll_languages_list(['fields' => 'slug'])
+            : ['fr'];
     }
 
     private function footerFields(string $lang): array
