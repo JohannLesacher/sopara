@@ -1,0 +1,144 @@
+@use "../config/variables" as *;
+
+$tabs-breakpoint: 1100px;
+
+.block-tabs {
+  display: flex;
+  flex-direction: column;
+
+  &__nav {
+    display: none;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    width: 100%;
+
+    @media (min-width: $tabs-breakpoint) {
+      display: flex;
+    }
+  }
+
+  &__nav-item {
+    cursor: pointer;
+    user-select: none;
+    padding: 1.875rem 6.5rem;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    opacity: 0.5;
+    flex: 1 1 0;
+    min-width: 0;
+
+    // ≥ 3 items
+    &:first-child:nth-last-child(n+4),
+    &:first-child:nth-last-child(n+4) ~ & {
+      padding: 1.875rem 4rem;
+    }
+
+    // ≥ 4 items
+    &:first-child:nth-last-child(n+5),
+    &:first-child:nth-last-child(n+5) ~ & {
+      padding: 1.875rem 2.25rem;
+    }
+
+    // ≥ 5 items
+    &:first-child:nth-last-child(n+6),
+    &:first-child:nth-last-child(n+6) ~ & {
+      padding: 1.875rem 1.5rem;
+    }
+
+    // ≥ 6 items
+    &:first-child:nth-last-child(n+6),
+    &:first-child:nth-last-child(n+6) ~ & {
+      padding: 1.875rem 1rem;
+    }
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.8;
+    }
+
+    &.is-active {
+      opacity: 1;
+    }
+
+    .block-tab__header-title {
+      margin: 0;
+      font-size: 1rem;
+      pointer-events: none;
+    }
+  }
+}
+
+.block-tabs .block-tab-wrapper {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+
+  @media (max-width: #{$tabs-breakpoint - 1px}) {
+    display: block;
+    border-top: 1px solid currentColor;
+
+    &:last-child {
+      border-bottom: 1px solid currentColor;
+    }
+  }
+}
+
+.block-tab__header {
+  cursor: pointer;
+  user-select: none;
+  padding: 1.875rem clamp(2rem, 6dvw, 6.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+
+  .block-tab-wrapper > & {
+    @media (min-width: $tabs-breakpoint) {
+      display: none;
+    }
+
+    &::after {
+      content: "+";
+      font-size: 1.5rem;
+      line-height: 1;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    &.is-active::after {
+      transform: rotate(45deg);
+    }
+  }
+
+  &-title {
+    margin: 0;
+    font-family: var(--wp--preset--font-family--syncopate);
+    text-transform: uppercase;
+    color: var(--wp--preset--color--secondary-0);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--small);
+    line-height: 1.5;
+    display: flex;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+.block-tab__content {
+  padding: clamp(2rem, 3.5dvw, 3.125rem);
+
+  @media (max-width: #{$tabs-breakpoint - 1px}) {
+    display: none;
+
+    .block-tab-wrapper.is-active & {
+      display: block;
+    }
+  }
+
+  .wp-block-list > li {
+    margin-top: 0;
+  }
+}

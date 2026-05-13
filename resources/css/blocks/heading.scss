@@ -1,5 +1,5 @@
 .wp-block-heading {
-  &.is-style-centered-mobile {
+  &.is-responsive-mobile-center {
     @media screen and (max-width: 768px) {
       text-align: center;
       margin-right: auto !important;

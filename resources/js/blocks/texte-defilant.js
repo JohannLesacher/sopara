@@ -9,8 +9,10 @@ document.querySelectorAll('.block-texte-defilant').forEach((block) => {
     const copies = Math.ceil(block.offsetWidth / itemWidth) + 2;
 
     for (let i = 0; i < copies; i++) {
-      const clone = original.cloneNode(true);
+      const clone = document.createElement('span');
+      clone.className = original.className;
       clone.setAttribute('aria-hidden', 'true');
+      clone.innerHTML = original.innerHTML;
       track.appendChild(clone);
     }
 

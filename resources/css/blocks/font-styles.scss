@@ -1,0 +1,108 @@
+p,
+.wp-block-heading,
+.wp-block-accordion-heading,
+.wp-block-list li {
+  &.is-style-s0_875-7-1_5-aa {
+    font-family: var(--wp--preset--font-family--syncopate);
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 700;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  &.is-style-s1-7-1_2-aa {
+    font-family: var(--wp--preset--font-family--syncopate);
+    font-size: var(--wp--preset--font-size--regular);
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  &.is-style-s1_5-7-1_3-aa {
+    font-family: var(--wp--preset--font-family--syncopate);
+    font-size: var(--wp--preset--font-size--h-5);
+    font-weight: 700;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  &.is-style-s2-7-1_2-aa {
+    font-family: var(--wp--preset--font-family--syncopate);
+    font-size: var(--wp--preset--font-size--h-4);
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  &.is-style-s2-7-1_3-aa {
+    font-family: var(--wp--preset--font-family--syncopate);
+    font-size: var(--wp--preset--font-size--h-4);
+    font-weight: 700;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  &.is-style-f0_875-7-1_5-aa {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 700;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  &.is-style-f1-4-1_5 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--regular);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  &.is-style-f1_125-4-1_5 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--medium);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  &.is-style-f1_125-5-1_5 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--medium);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  &.is-style-f1_125-6-1_5 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--medium);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  &.is-style-f1_125-7-1_5 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--medium);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  &.is-style-f1_250-7-1_5 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--large);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  &.is-style-f1_500-7-1_3 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--h-5);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  &.is-style-f2_250-7-1_2 {
+    font-family: var(--wp--preset--font-family--figtree);
+    font-size: var(--wp--preset--font-size--h-4);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}

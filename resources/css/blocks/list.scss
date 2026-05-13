@@ -1,0 +1,5 @@
+.wp-block-list {
+  > * + * {
+    margin-block-start: 2ch;
+  }
+}

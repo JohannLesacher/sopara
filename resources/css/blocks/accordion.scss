@@ -11,11 +11,26 @@
     &.hide-on-mobile {
       display: none;
     }
+
+    & + & {
+      margin-top: 1rem;
+    }
   }
 
   &-heading {
     border-top: 1px solid currentColor;
     padding-top: 1rem;
+
+    &__toggle-title {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+
+      img {
+        aspect-ratio: 1;
+        width: 3.125rem;
+      }
+    }
 
     &:hover {
       color: $secondary-1;
@@ -47,6 +62,11 @@
 
   &-panel {
     margin-block-start: 1rem;
+    margin-bottom: 2rem !important;
+
+    .wp-block-list > li {
+      margin-top: 0;
+    }
   }
 
   .show-more-faq-button {
@@ -58,5 +78,11 @@
     text-decoration: underline;
     cursor: pointer;
     margin-top: 3rem;
+  }
+
+  &.is-style-with-icon {
+    .wp-block-accordion-panel {
+      padding-left: 6.125rem;
+    }
   }
 }

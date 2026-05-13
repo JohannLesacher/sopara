@@ -1,0 +1,168 @@
+.block-image-hotspots {
+  &__wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__point {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: var(--y);
+    left: var(--x);
+    z-index: 1;
+
+    &:has(.block-image-hotspots__marker[aria-expanded="true"]) {
+      z-index: 10;
+    }
+  }
+
+  &__marker {
+    position: relative;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--wp--preset--color--primary-0);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, box-shadow 0.3s ease;
+    z-index: 1;
+    animation: hotspot-pulse 2.8s ease-in-out infinite;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        var(--wp--preset--color--primary-0) 0%,
+        color-mix(in srgb, var(--wp--preset--color--primary-0) 50%, transparent) 45%,
+        transparent 75%
+      );
+      z-index: -1;
+      pointer-events: none;
+      animation: hotspot-radiate 2.8s ease-out infinite;
+    }
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(1.1);
+      animation-play-state: paused;
+
+      &::after {
+        animation-play-state: paused;
+        opacity: 0;
+      }
+    }
+
+    &[aria-expanded="true"] {
+      transform: scale(1.15);
+      animation-play-state: paused;
+
+      &::after {
+        animation: none;
+        opacity: 0;
+      }
+    }
+  }
+
+  @keyframes hotspot-pulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
+    50%      { box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35); }
+  }
+
+  @keyframes hotspot-radiate {
+    0%        { transform: scale(1);   opacity: 0.55; }
+    70%, 100% { transform: scale(3);   opacity: 0; }
+  }
+
+  &__tooltip {
+    position: absolute;
+    width: 400px;
+    max-width: min(400px, 90vw);
+    padding: 2rem 2rem 2rem 5rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    background: var(--wp--preset--color--secondary-4);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 999;
+    top: -2rem;
+    left: -2rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      background: var(--wp--preset--color--primary-0);
+      border: 2px solid #fff;
+      line-height: 0;
+      display: flex;
+      padding: 0;
+    }
+
+    &[data-pos-x="left"] {
+      left: auto;
+      right: -2rem;
+      padding-left: 2rem;
+      padding-right: 4rem;
+
+      &::before {
+        left: auto;
+        right: 2rem;
+      }
+    }
+
+    &[data-pos-y="top"] {
+      top: auto;
+      bottom: -2rem;
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+
+      &::before {
+        top: auto;
+        bottom: 2rem;
+      }
+    }
+  }
+
+  &__tooltip-title {
+    margin: 0 0 4px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--wp--preset--color--secondary-0);
+  }
+
+  &__tooltip-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  &--hover &__point:hover &__tooltip,
+  &--hover &__point:focus-within &__tooltip,
+  &__marker[aria-expanded="true"] + &__tooltip {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}

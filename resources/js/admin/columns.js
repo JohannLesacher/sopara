@@ -4,4 +4,8 @@ domReady(() => {
   wp.blocks.registerBlockStyle('core/columns', {
     name: 'inverted-mobile', label: 'Inversé mobile',
   });
+
+  wp.blocks.registerBlockStyle('core/columns', {
+    name: 'linked', label: 'Liés',
+  });
 });

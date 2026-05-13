@@ -57,6 +57,19 @@ class TexteDefilant extends BlockEngine
                     ],
                     'std' => 'gauche',
                 ],
+                [
+                    'id' => 'tag',
+                    'name' => 'Élément HTML',
+                    'type' => 'select',
+                    'options' => [
+                        'div' => 'div',
+                        'p' => 'p',
+                        'h1' => 'h1',
+                        'h2' => 'h2',
+                        'h3' => 'h3',
+                    ],
+                    'std' => 'div',
+                ],
             ],
         ];
 

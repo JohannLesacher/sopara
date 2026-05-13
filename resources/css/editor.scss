@@ -9,8 +9,14 @@
 @use "sections/header";
 @use "sections/footer";
 
+@use "blocks/font-styles";
 @use "blocks/buttons";
 @use "blocks/paragraph";
+@use "blocks/accordion";
+@use "blocks/columns";
+@use "blocks/group";
+@use "blocks/heading";
+@use "blocks/list";
 
 /* Ajustements editor */
 .block-image-card {

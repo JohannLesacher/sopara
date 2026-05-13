@@ -10,9 +10,11 @@
 @use "sections/footer";
 @use "sections/secteurs";
 
+@use "blocks/font-styles";
 @use "blocks/buttons";
 @use "blocks/paragraph";
 @use "blocks/accordion";
 @use "blocks/columns";
 @use "blocks/group";
 @use "blocks/heading";
+@use "blocks/list";
