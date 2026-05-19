@@ -9,6 +9,7 @@ const ANIMATION_OPTIONS = [
   {label: 'Fondu depuis la gauche', value: 'fade-left'},
   {label: 'Fondu depuis la droite', value: 'fade-right'},
   {label: 'Zoom', value: 'scale'},
+  {label: 'Texte par caractères', value: 'text-chars'},
 ];
 
 const ALLOWED_BLOCKS = ['core/heading', 'core/group', 'core/columns', 'core/column', 'core/image', 'core/button', 'core/cover', 'sur-mesure/slide'];

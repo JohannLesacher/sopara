@@ -1,4 +1,4 @@
-import { animate, stagger, svg } from 'animejs';
+import { animate, stagger, svg, splitText } from 'animejs';
 
 const ANIMATIONS = {
   'fade': {
@@ -20,6 +20,18 @@ const ANIMATIONS = {
     opacity: [0, 1],
     scale: [0.95, 1],
   },
+};
+
+const animateTextChars = (els) => {
+  els.forEach((el, i) => {
+    const { chars } = splitText(el, { chars: true });
+    animate(chars, {
+      opacity: [0.3, 1],
+      duration: 700,
+      delay: stagger(30, { start: i * 120 }),
+      ease: 'out(3)',
+    });
+  });
 };
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -50,6 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {});
 
     Object.entries(groups).forEach(([type, els]) => {
+      if (type === 'text-chars') {
+        animateTextChars(els);
+        return;
+      }
       const params = ANIMATIONS[type] || ANIMATIONS['fade-up'];
       animate(els, {
         ...params,

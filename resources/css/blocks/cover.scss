@@ -1,0 +1,23 @@
+.wp-block-cover {
+  &.is-style-hero-banner {
+    .wp-block-cover__inner-container {
+      padding-bottom: 8rem;
+
+      @media (min-width: 1200px) {
+        max-width: calc(100% - 605px);
+        padding-bottom: 0
+      }
+
+      > .is-layout-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+
+        @media (min-width: 1200px) {
+          flex-direction: initial;
+          gap: var(--wp--preset--spacing--70);
+        }
+      }
+    }
+  }
+}

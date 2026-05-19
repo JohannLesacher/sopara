@@ -2,30 +2,8 @@ import { animate, stagger } from 'animejs';
 
 const MOBILE_BREAKPOINT = 991;
 const RING_GAP_DEG = 6;
+const HOVER_DURATION = 350;
 const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const positionItem = (item, angleDeg, radiusPercent, isMobile) => {
-  const rad = (angleDeg * Math.PI) / 180;
-  const x = Math.sin(rad) * radiusPercent;
-  const y = -Math.cos(rad) * radiusPercent;
-
-  item.style.setProperty('--x', `${x}%`);
-  item.style.setProperty('--y', `${y}%`);
-
-  let side = 'right';
-  if (isMobile) {
-    side = 'mobile';
-  } else if (angleDeg > 45 && angleDeg < 135) {
-    side = 'right';
-  } else if (angleDeg >= 135 && angleDeg <= 225) {
-    side = 'bottom';
-  } else if (angleDeg > 225 && angleDeg < 315) {
-    side = 'left';
-  } else {
-    side = 'top';
-  }
-  item.dataset.side = side;
-};
 
 const segmentLength = (count) => ((360 / count - RING_GAP_DEG) / 360) * 100;
 
@@ -43,69 +21,153 @@ class EtapesCirculaires {
     this.count = parseInt(root.dataset.count, 10) || 0;
     if (this.count < 2) return;
 
-    this.items = Array.from(root.querySelectorAll('.block-etapes-circulaires__item'));
-    this.center = root.querySelector('.block-etapes-circulaires__center');
+    this.nums = Array.from(root.querySelectorAll('.block-etapes-circulaires__num'));
+    this.boxes = Array.from(root.querySelectorAll('.block-etapes-circulaires__box'));
+    this.image = root.querySelector('.block-etapes-circulaires__image');
     this.ring = root.querySelector('.block-etapes-circulaires__ring');
     this.arc = root.querySelector('.block-etapes-circulaires__ring-arc');
+    this.base = root.querySelector('.block-etapes-circulaires__ring-base');
     this.mobilePanel = root.querySelector('.block-etapes-circulaires__mobile-panel');
     this.mobileTitre = root.querySelector('.block-etapes-circulaires__mobile-titre');
     this.mobileTexte = root.querySelector('.block-etapes-circulaires__mobile-texte');
 
     this.activeIndex = 0;
     this.revealed = false;
+    this.boxData = [];
 
-    this.layout();
+    this.initArc();
+    requestAnimationFrame(() => this.measureBoxes());
     this.bind();
     this.observe();
+
+    if (this.isMobile()) {
+      this.setMobileContent();
+    }
   }
 
   isMobile() {
     return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
   }
 
-  layout() {
-    const mobile = this.isMobile();
-    const radius = 48;
-
-    this.items.forEach((item, i) => {
-      positionItem(item, angleFor(i, this.count), radius, mobile);
-    });
-
+  initArc() {
+    if (this.base) {
+      this.base.setAttribute('stroke-dasharray', '100 0');
+    }
     if (this.arc) {
       const segLen = segmentLength(this.count);
       this.arc.setAttribute('stroke-dasharray', `${segLen} ${100 - segLen}`);
       this.arc.setAttribute('stroke-dashoffset', offsetForIndex(this.activeIndex, this.count));
     }
+  }
 
-    if (mobile) {
-      this.setMobileContent();
+  measureBoxes() {
+    if (this.isMobile()) {
+      this.boxData = [];
+      return;
     }
+
+    this.boxData = this.boxes.map((box) => {
+      const titre = box.querySelector('.block-etapes-circulaires__titre');
+      const texte = box.querySelector('.block-etapes-circulaires__texte');
+      if (!titre || !texte) return null;
+
+      titre.style.height = 'auto';
+      titre.style.opacity = '0';
+      texte.style.height = 'auto';
+      texte.style.opacity = '0';
+
+      const titreH = titre.getBoundingClientRect().height;
+      const texteH = texte.getBoundingClientRect().height;
+
+      box.style.minHeight = `${Math.max(titreH, texteH)}px`;
+
+      titre.style.height = `${titreH}px`;
+      titre.style.opacity = '';
+      texte.style.height = '0px';
+      texte.style.opacity = '0';
+
+      return { titre, texte, titreH, texteH };
+    });
   }
 
   bind() {
-    this.items.forEach((item) => {
-      const idx = parseInt(item.dataset.index, 10);
+    this.boxes.forEach((box) => {
+      const idx = parseInt(box.dataset.index, 10);
 
-      item.addEventListener('mouseenter', () => {
+      box.addEventListener('mouseenter', () => {
         if (this.isMobile()) return;
         this.setActive(idx);
+        this.hoverEnter(idx);
       });
 
-      item.addEventListener('focus', () => {
+      box.addEventListener('mouseleave', () => {
+        if (this.isMobile()) return;
+        this.hoverLeave(idx);
+      });
+
+      box.addEventListener('focus', () => {
         if (this.isMobile()) return;
         this.setActive(idx);
+        this.hoverEnter(idx);
       });
 
-      item.addEventListener('click', () => {
-        if (!this.isMobile()) return;
-        this.setActive(idx);
+      box.addEventListener('blur', () => {
+        if (this.isMobile()) return;
+        this.hoverLeave(idx);
       });
+    });
+
+    this.nums.forEach((num) => {
+      const idx = parseInt(num.dataset.index, 10);
+      num.addEventListener('click', () => this.setActive(idx));
+      num.addEventListener('focus', () => this.setActive(idx));
     });
 
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => this.layout(), 150);
+      resizeTimer = setTimeout(() => {
+        this.measureBoxes();
+        if (this.isMobile()) {
+          this.setMobileContent();
+        }
+      }, 150);
+    });
+  }
+
+  hoverEnter(idx) {
+    const d = this.boxData[idx];
+    if (!d) return;
+
+    if (PREFERS_REDUCED_MOTION) {
+      d.texte.style.height = `${d.texteH}px`;
+      d.texte.style.opacity = '1';
+      return;
+    }
+
+    animate(d.texte, {
+      height: d.texteH,
+      opacity: 1,
+      duration: HOVER_DURATION,
+      ease: 'inOut(2)',
+    });
+  }
+
+  hoverLeave(idx) {
+    const d = this.boxData[idx];
+    if (!d) return;
+
+    if (PREFERS_REDUCED_MOTION) {
+      d.texte.style.height = '0px';
+      d.texte.style.opacity = '0';
+      return;
+    }
+
+    animate(d.texte, {
+      height: 0,
+      opacity: 0,
+      duration: HOVER_DURATION,
+      ease: 'inOut(2)',
     });
   }
 
@@ -113,12 +175,21 @@ class EtapesCirculaires {
     if (index === this.activeIndex) return;
     this.activeIndex = index;
 
-    this.items.forEach((item) => {
-      const isActive = parseInt(item.dataset.index, 10) === index;
+    this.nums.forEach((num) => {
+      const isActive = parseInt(num.dataset.index, 10) === index;
       if (isActive) {
-        item.setAttribute('data-active', '');
+        num.setAttribute('data-active', '');
       } else {
-        item.removeAttribute('data-active');
+        num.removeAttribute('data-active');
+      }
+    });
+
+    this.boxes.forEach((box) => {
+      const isActive = parseInt(box.dataset.index, 10) === index;
+      if (isActive) {
+        box.setAttribute('data-active', '');
+      } else {
+        box.removeAttribute('data-active');
       }
     });
 
@@ -138,7 +209,7 @@ class EtapesCirculaires {
 
   setMobileContent() {
     if (!this.mobilePanel) return;
-    const item = this.items[this.activeIndex];
+    const item = this.boxes[this.activeIndex];
     if (!item) return;
     this.mobileTitre.innerHTML = item.querySelector('.block-etapes-circulaires__titre')?.innerHTML || '';
     this.mobileTexte.innerHTML = item.querySelector('.block-etapes-circulaires__texte')?.innerHTML || '';
@@ -186,8 +257,9 @@ class EtapesCirculaires {
 
   reveal() {
     if (PREFERS_REDUCED_MOTION) {
-      if (this.center) this.center.style.opacity = 1;
-      this.items.forEach((item) => (item.style.opacity = 1));
+      if (this.image) this.image.style.opacity = 1;
+      this.nums.forEach((n) => (n.style.opacity = 1));
+      this.boxes.forEach((b) => (b.style.opacity = 1));
       if (this.ring) this.ring.style.opacity = 1;
       if (this.mobilePanel) {
         this.setMobileContent();
@@ -196,8 +268,8 @@ class EtapesCirculaires {
       return;
     }
 
-    if (this.center) {
-      animate(this.center, {
+    if (this.image) {
+      animate(this.image, {
         opacity: [0, 1],
         scale: [0.85, 1],
         duration: 700,
@@ -214,10 +286,17 @@ class EtapesCirculaires {
       });
     }
 
-    animate(this.items, {
+    animate(this.nums, {
       opacity: [0, 1],
-      duration: 600,
-      delay: stagger(140, { start: 300 }),
+      duration: 500,
+      delay: stagger(120, { start: 250 }),
+      ease: 'out(3)',
+    });
+
+    animate(this.boxes, {
+      opacity: [0, 1],
+      duration: 500,
+      delay: stagger(120, { start: 350 }),
       ease: 'out(3)',
     });
 
@@ -225,7 +304,7 @@ class EtapesCirculaires {
       animate(this.mobilePanel, {
         opacity: [0, 1],
         duration: 500,
-        delay: 300 + this.count * 140,
+        delay: 250 + this.count * 120,
         ease: 'out(2)',
         onBegin: () => this.setMobileContent(),
       });

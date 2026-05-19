@@ -1,5 +1,13 @@
-import { animate, stagger } from 'animejs';
-import { onScroll } from './scroll.js';
+import {animate, stagger} from 'animejs';
+import {onScroll} from './scroll.js';
+
+const clampValue = (vw) => {
+  const rem = 16;
+  const min = 2.43 * rem;
+  const max = 3.88 * rem;
+  const preferred = 1.74 * rem + 0.025 * vw;
+  return Math.min(Math.max(preferred, min), max);
+};
 
 class Secteurs {
   constructor(el) {
@@ -36,7 +44,7 @@ class Secteurs {
     this.measure();
 
     this.appliedOffset = this.atTop ? this.offset : 0;
-    animate(this.el, { translateY: this.appliedOffset, duration: 0 });
+    animate(this.el, {translateY: this.appliedOffset, duration: 0});
 
     if (this.atTop) {
       this.animateEntry();
@@ -57,7 +65,7 @@ class Secteurs {
       this.transition('scroll');
     });
 
-    window.addEventListener('resize', this.resizeHandler, { passive: true });
+    window.addEventListener('resize', this.resizeHandler, {passive: true});
     this.el.addEventListener('mouseenter', this.enterHandler);
     this.el.addEventListener('mouseleave', this.leaveHandler);
   }
@@ -90,6 +98,7 @@ class Secteurs {
     }, 150);
   }
 
+
   // Si le premier bloc tient sur moins d'un écran, on remonte le bloc
   // secteurs pour qu'il apparaisse visuellement dans son aire (sticky bottom
   // sinon le placerait au bas du viewport, sous le premier bloc).
@@ -98,7 +107,8 @@ class Secteurs {
       this.offset = 0;
       return;
     }
-    const h = this.firstBlock.offsetHeight;
+
+    const h = this.firstBlock.offsetHeight - clampValue(window.innerWidth) + 32;
     const vh = window.innerHeight;
     this.offset = h < vh ? h - vh : 0;
   }
@@ -211,7 +221,7 @@ class Secteurs {
       translateX: (_, i) => offsets[i],
       duration: 300,
       ease: 'out(2)',
-      delay: stagger(40, { from: 'last' }),
+      delay: stagger(40, {from: 'last'}),
     });
 
     animate(this.imagesContainer, {

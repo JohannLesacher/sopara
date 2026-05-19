@@ -12,5 +12,7 @@ import '@scripts/admin/group';
 import '@scripts/admin/heading';
 import '@scripts/admin/buttons';
 import '@scripts/admin/accordion';
+import '@scripts/admin/list';
+import '@scripts/admin/cover';
 import '@scripts/admin/font-styles';
 
