@@ -89,10 +89,12 @@ $tabs-breakpoint: 1100px;
   user-select: none;
   padding: 1.875rem clamp(2rem, 6dvw, 6.5rem);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
   text-align: center;
+  position: relative;
   transition: background-color 0.2s ease-in-out;
 
   .block-tab-wrapper > & {
@@ -104,6 +106,9 @@ $tabs-breakpoint: 1100px;
       content: "+";
       font-size: 1.5rem;
       line-height: 1;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
       transition: transform 0.2s ease-in-out;
     }
 

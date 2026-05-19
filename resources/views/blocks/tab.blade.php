@@ -1,4 +1,4 @@
-<div class="block-tab-wrapper">
+<div class="block-tab-wrapper" @if(!empty($attributes['showFirstChildInHeaderMobile'])) data-mobile-header-preview @endif>
   <header
     class="block-tab__header has-{!! $attributes['backgroundColor'] ?? '' !!}-background-color has-{!! $attributes['textColor'] ?? '' !!}-color">
     @isset($attributes['title'])

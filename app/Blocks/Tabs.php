@@ -19,6 +19,7 @@ class Tabs
             'api_version' => 3,
             'attributes' => [
                 'title' => ['type' => 'string', 'default' => 'Titre onglet'],
+                'showFirstChildInHeaderMobile' => ['type' => 'boolean', 'default' => false],
             ],
             'supports' => [
                 'color' => ['background' => true, 'text' => true],

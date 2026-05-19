@@ -37,6 +37,30 @@
         </div>
       @endforeach
     </div>
+
+    <ul class="block-image-hotspots__mobile-list">
+      @foreach($points() as $index => $point)
+        @php
+          $title = trim($point['title'] ?? '');
+          $text  = trim($point['text']  ?? '');
+        @endphp
+        <li class="block-image-hotspots__mobile-item">
+          <button
+            type="button"
+            class="block-image-hotspots__mobile-card"
+            data-index="{{ $index }}"
+            aria-expanded="false"
+          >
+            @if($title)
+              <h3 class="block-image-hotspots__mobile-title">{!! $title !!}</h3>
+            @endif
+            @if($text)
+              <p class="block-image-hotspots__mobile-text">{!! nl2br(e($text)) !!}</p>
+            @endif
+          </button>
+        </li>
+      @endforeach
+    </ul>
   @elseif($is_preview)
     <p>Sélectionnez une image pour commencer.</p>
   @endif

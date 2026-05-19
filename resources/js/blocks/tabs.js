@@ -1,11 +1,46 @@
 class Tabs {
+  static MOBILE_MQ = '(max-width: 1099px)';
+
   static init() {
     this.tabsBlocks = document.querySelectorAll('.block-tabs');
     if (this.tabsBlocks.length === 0) return;
 
     this.tabsBlocks.forEach((tabBlock, index) => {
       this.setupTabs(tabBlock, index);
+      this.setupMobileHeaderPreview(tabBlock);
     });
+  }
+
+  static setupMobileHeaderPreview(tabBlock) {
+    const wrappers = tabBlock.querySelectorAll('.block-tab-wrapper[data-mobile-header-preview]');
+    if (!wrappers.length) return;
+
+    const mq = window.matchMedia(this.MOBILE_MQ);
+
+    const apply = () => {
+      wrappers.forEach((wrapper) => {
+        const header = wrapper.querySelector('.block-tab__header');
+        const content = wrapper.querySelector('.block-tab__content');
+        if (!header || !content) return;
+
+        const moved = wrapper.querySelector('.block-tab__header-preview');
+
+        if (mq.matches) {
+          if (moved) return;
+          const first = content.firstElementChild;
+          if (!first) return;
+          first.classList.add('block-tab__header-preview');
+          const title = header.querySelector('.block-tab__header-title');
+          title ? title.after(first) : header.appendChild(first);
+        } else if (moved) {
+          moved.classList.remove('block-tab__header-preview');
+          content.insertBefore(moved, content.firstChild);
+        }
+      });
+    };
+
+    apply();
+    mq.addEventListener('change', apply);
   }
 
   static setupTabs(tabBlock, blockIndex) {
