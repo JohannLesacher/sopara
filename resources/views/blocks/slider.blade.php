@@ -1,22 +1,26 @@
-@php
-  $splideData = [
-      'perPage' => $attributes['perPage'] ?? 3,
-      'type' => ($attributes['loop'] ?? false) ? 'loop' : 'slide',
-      'autoplay' => $attributes['autoplay'] ?? false,
-  ];
-  if (isset($attributes['perPageTablet'])) {
-      $splideData['perPageTablet'] = $attributes['perPageTablet'];
-  }
-  if (isset($attributes['perPageMobile'])) {
-      $splideData['perPageMobile'] = $attributes['perPageMobile'];
-  }
-@endphp
-<div
-  class="block-slider splide {{ $attributes['className'] ?? '' }} {{ isset($attributes['align']) ? 'align' . $attributes['align'] : '' }}"
-  data-splide='{{ json_encode($splideData) }}'>
+<div class="{{ implode(' ', $classeNames()) }}" @foreach ($dataAttributes() as $key => $value) {{ $key }}="{{ $value }}" @endforeach>
   <div class="splide__track">
     <ul class="splide__list">
       {!! $content !!}
     </ul>
   </div>
+  @if ($showArrows())
+    <div class="splide__arrows">
+      <button
+        class="splide__arrow splide__arrow--prev"
+        type="button"
+        aria-label="Previous slide"
+        aria-controls="splide01-track"
+      >
+        @svg('arrow')
+      </button>
+      <button
+        class="splide__arrow splide__arrow--next"
+        type="button"
+        aria-label="Next slide"
+        aria-controls="splide01-track"
+      > @svg('arrow')
+      </button>
+    </div>
+  @endif
 </div>

@@ -12,7 +12,7 @@ const ANIMATION_OPTIONS = [
   {label: 'Texte par caractères', value: 'text-chars'},
 ];
 
-const ALLOWED_BLOCKS = ['core/heading', 'core/group', 'core/columns', 'core/column', 'core/image', 'core/button', 'core/cover', 'sur-mesure/slide'];
+const ALLOWED_BLOCKS = ['core/heading', 'core/group', 'core/columns', 'core/column', 'core/image', 'core/button', 'core/cover', 'core/accordion-item', 'sur-mesure/slide'];
 
 const addAnimationControl = createHigherOrderComponent((BlockEdit) => {
   return (props) => {

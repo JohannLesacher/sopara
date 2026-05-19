@@ -1,5 +1,5 @@
 <article
-  class="block-hover-sector-image {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }}">
+  class="block-hover-sector-image {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }} is-animated">
   @if($imageSrc())
     <div class="block-hover-sector-image__media">
       <img src="{!! $imageSrc() !!}" alt="" />

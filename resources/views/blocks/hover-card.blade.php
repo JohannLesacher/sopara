@@ -1,5 +1,5 @@
 <article
-  class="block-hover-card {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }}">
+  class="block-hover-card {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }} is-animated">
   <div class="block-hover-card__face block-hover-card__face--front">
     @if($imageSrc())
       <div class="block-hover-card__media">

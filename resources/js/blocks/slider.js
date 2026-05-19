@@ -1,6 +1,6 @@
 import Splide from '@splidejs/splide';
-import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
-import { Intersection } from '@splidejs/splide-extension-intersection';
+import {AutoScroll} from '@splidejs/splide-extension-auto-scroll';
+import {Intersection} from '@splidejs/splide-extension-intersection';
 
 class Slider {
   static getSlidePadding(el) {
@@ -15,45 +15,52 @@ class Slider {
     containers.forEach((container) => {
       const slidePadding = Slider.getSlidePadding(container) ?? 0;
 
-      const dataSplide = JSON.parse(container.dataset.splide || '{}');
-      const perPage = dataSplide.perPage ?? 3;
-      const perPageTablet =
-        dataSplide.perPageTablet ?? Math.max(1, perPage - 1);
-      const perPageMobile =
-        dataSplide.perPageMobile ?? Math.max(1, perPage - 2);
-      const autoplay = dataSplide.autoplay ?? false;
+      const perPage = Number(container.dataset.perPage ?? 3);
+      const perPageTablet = Number(
+        container.dataset.perPageTablet ?? Math.max(1, perPage - 1),
+      );
+      const perPageMobile = Number(
+        container.dataset.perPageMobile ?? Math.max(1, perPage - 2),
+      );
+      const autoplay = container.dataset.autoplay === 'true';
+      const arrows = container.dataset.arrows === 'true';
 
       const splide = new Splide(container, {
+        perPage,
         perMove: 1,
         gap: '1rem',
-        // wheel: true,
-        // releaseWheel: true,
-        arrows: false,
+        arrows,
         pagination: false,
-        padding: { left: slidePadding, right: slidePadding },
+        padding: {left: slidePadding, right: slidePadding},
         speed: 600,
         easing: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
         breakpoints: {
           1024: {
             perPage: perPageTablet,
-            padding: { left: slidePadding, right: slidePadding * 2 },
+            padding: {left: slidePadding, right: slidePadding * 2},
           },
           640: {
             perPage: perPageMobile,
-            padding: { left: slidePadding, right: slidePadding * 3 },
+            padding: {left: slidePadding, right: slidePadding * 3},
           },
         },
-        ...(autoplay && {
+        ... autoplay && {
+          type: 'loop',
+          drag: 'free',
+          focus: 'center',
           intersection: {
-            inView: { autoplay: true },
+            inView: {
+              autoScroll: {
+                speed: 0.5,
+              }
+            },
           },
-          autoScroll: {
-            speed: 0.5,
-          },
-        }),
+        }
       });
 
       splide.on('overflow', (isOverflow) => {
+        if (autoplay) return;
+
         splide.options = {
           drag: isOverflow,
           clones: isOverflow ? undefined : 0,
@@ -63,7 +70,7 @@ class Slider {
         list.style.justifyContent = isOverflow ? '' : 'center';
       });
 
-      splide.mount(autoplay ? { AutoScroll, Intersection } : {});
+      splide.mount(autoplay ? {AutoScroll, Intersection} : {});
     });
   }
 }

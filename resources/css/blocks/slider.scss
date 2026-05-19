@@ -25,3 +25,28 @@
     }
   }
 }
+
+.splide__arrows {
+  display: flex;
+  gap: 0.25rem;
+  padding: 1rem 0 1rem var(--splide-padding-start);
+
+  .splide__arrow {
+    position: relative;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    transform: none;
+    opacity: 1;
+    background-color: var(--wp--preset--color--white);
+
+    svg {
+      fill: none;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+}
