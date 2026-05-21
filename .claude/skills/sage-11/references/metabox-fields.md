@@ -26,6 +26,7 @@
 | Image select | `image_select` | Sélection par image |
 | Slider | `slider` | Valeur numérique par glisser |
 | oEmbed | `oembed` | YouTube, Vimeo, etc. |
+| Link | `link` | **Préféré pour les URLs.** Picker WP (post/page/URL externe) + texte + cible — retourne `['url', 'title', 'target', 'post_id']` |
 | Key Value | `key_value` | Paires clé/valeur libres |
 | Hidden | `hidden` | Valeur cachée |
 | Custom HTML | `custom_html` | HTML statique dans l'interface admin |
@@ -38,7 +39,7 @@
 |------|-----|-------|
 | Email | `email` | Adresse e-mail |
 | Number | `number` | Nombre |
-| URL | `url` | URL |
+| URL | `url` | URL brute uniquement — **préférer `link`** (picker WP + texte + cible) sauf si on a vraiment besoin d'un simple champ texte URL |
 | Range | `range` | Slider natif navigateur |
 
 ## Champs WordPress

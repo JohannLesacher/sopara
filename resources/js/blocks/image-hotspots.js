@@ -124,6 +124,15 @@ class ImageHotspots {
         });
       });
 
+      const closeButtons = block.querySelectorAll('.block-image-hotspots__tooltip-close');
+      closeButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearHoverTimer();
+          closeAll();
+        });
+      });
+
       document.addEventListener('click', (e) => {
         if (
           !e.target.closest('.block-image-hotspots__point') &&

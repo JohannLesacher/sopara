@@ -55,6 +55,16 @@ class ImageHotspots extends BlockEngine
                             'rows' => 3,
                         ],
                         [
+                            'id'   => 'cta_text',
+                            'name' => 'CTA (Texte)',
+                            'type' => 'text',
+                        ],
+                        [
+                            'id'   => 'cta_url',
+                            'name' => 'CTA (Lien)',
+                            'type' => 'text',
+                        ],
+                        [
                             'id'   => 'pos_x',
                             'name' => 'Position X (%)',
                             'type' => 'number',
