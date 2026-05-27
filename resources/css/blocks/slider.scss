@@ -28,8 +28,14 @@
 
 .splide__arrows {
   display: flex;
-  gap: 0.25rem;
-  padding: 1rem 0 1rem var(--splide-padding-start);
+  justify-content: center;
+  width: 100dvw;
+  gap: 1rem;
+  padding: 2rem 0 1rem 0;
+
+  &.is-looped {
+    padding-left: 0;
+  }
 
   .splide__arrow {
     position: relative;
@@ -40,13 +46,34 @@
     transform: none;
     opacity: 1;
     background-color: var(--wp--preset--color--white);
+    width: 3em;
+    height: 3em;
 
     svg {
       fill: none;
+      width: 1.75em;
+      height: 1.75em;
     }
 
     &:disabled {
       opacity: 0.5;
+    }
+  }
+
+
+  .has-arrows-above & {
+    position: absolute;
+    top: 25%;
+    transform: translateY(-50%);
+    justify-content: space-between;
+    padding: 0 calc(var(--splide-padding-start) - 2rem);
+
+    .splide__arrow {
+      background-color: var(--wp--preset--color--primary-0);
+
+      svg path {
+        stroke: #fff;
+      }
     }
   }
 }

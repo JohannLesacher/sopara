@@ -14,7 +14,7 @@
                 data-megamenu-image="{{ $item->megamenu_image_id ? wp_get_attachment_image($item->megamenu_image_id, 'large') : '' }}"
                 data-megamenu-children="{{ json_encode($item->children) }}"
               @endif>
-              <a href="{{ $item->url }}">{{ $item->label }}</a>
+              <a href="{{ $item->url }}">{!! $item->label !!}</a>
             </li>
           @endforeach
         </ul>
@@ -75,7 +75,7 @@
           <ul class="nav-primary">
             @foreach($navigationCTA as $item)
               <li class="menu-item {{ $item->active ? 'is-active' : '' }}">
-                <a href="{{ $item->url }}">{{ $item->label }}</a>
+                <a href="{{ $item->url }}">{!! $item->label !!}</a>
               </li>
             @endforeach
           </ul>

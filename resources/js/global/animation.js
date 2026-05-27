@@ -76,21 +76,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const queue = (target, obs) => {
+    pendingBatch.push(target);
+    obs.unobserve(target);
+    clearTimeout(flushTimer);
+    flushTimer = setTimeout(flush, 50);
+  };
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      pendingBatch.push(entry.target);
-      observer.unobserve(entry.target);
+      queue(entry.target, observer);
     });
-
-    clearTimeout(flushTimer);
-    flushTimer = setTimeout(flush, 50);
   }, {
     rootMargin: '0px 0px -50px 0px',
     threshold: 0.1,
   });
 
-  elements.forEach(el => observer.observe(el));
+  // Slider slides: clipped horizontally by overflow container.
+  // Threshold 0.1 d'area échoue quand seul 1px H visible. Threshold 0 + rootMargin H étendu
+  // = vertical garde comportement initial, horizontal accepte 1px.
+  const sliderObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      queue(entry.target, sliderObserver);
+    });
+  }, {
+    rootMargin: '0px 9999px -50px 9999px',
+    threshold: 0.1,
+  });
+
+  elements.forEach(el => {
+    if (el.classList.contains('is-animated--slide')) {
+      sliderObserver.observe(el);
+    } else {
+      observer.observe(el);
+    }
+  });
 });
 
 /* Button Icon Animation */

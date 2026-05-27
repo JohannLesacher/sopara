@@ -56,3 +56,10 @@ add_filter( 'block_categories_all', function ( $categories ) {
         ...$categories,
     ];
 } );
+
+
+add_filter('image_size_names_choose', function ($sizes) {
+    return array_merge($sizes, [
+        'very-large' => __('Très large', 'sage'),
+    ]);
+});

@@ -21,6 +21,7 @@ description: >
 - Pas de `@php` dans les vues
 - Hooks WordPress déclarés dans les Service Providers, jamais dans `functions.php`
 - `get_post_meta()` plutôt que les helpers MetaBox (`rwmb_meta`, `rwmb_get_value`)
+- **Jamais de `<img src="...">` en dur** — toujours `wp_get_attachment_image($id, 'size')` (génère automatiquement `srcset`, `sizes`, `alt`, `loading`, `decoding`). Le Composer expose un `*Id()` (l'ID d'attachment), la vue appelle `{!! wp_get_attachment_image($id(), 'large') !!}`. Exceptions tolérées uniquement quand on n'a pas d'attachment WP (logo SVG inline, image distante).
 
 ---
 

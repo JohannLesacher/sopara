@@ -17,6 +17,7 @@ registerBlockType('sur-mesure/slider', {
     perPageTablet: { type: 'number' },
     perPageMobile: { type: 'number' },
     loop: { type: 'boolean', default: false },
+    arrows: { type: 'boolean', default: false },
     autoplay: { type: 'boolean', default: false },
   },
   supports: {
@@ -61,6 +62,11 @@ registerBlockType('sur-mesure/slider', {
             label: 'Boucle infinie',
             checked: attributes.loop,
             onChange: (val) => setAttributes({ loop: val }),
+          }),
+          el(ToggleControl, {
+            label: 'Flèches',
+            checked: attributes.arrows,
+            onChange: (val) => setAttributes({ arrows: val }),
           }),
           el(ToggleControl, {
             label: 'Lecture automatique',

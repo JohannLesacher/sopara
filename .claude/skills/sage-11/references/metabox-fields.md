@@ -97,8 +97,10 @@
 get_post_meta(get_the_ID(), 'mon_champ', true)
 
 // Image single_image (retourne un ID d'attachment)
+// Le Composer expose l'ID, la vue Blade rend avec wp_get_attachment_image
+// pour bénéficier des srcset/sizes/alt/loading auto. Jamais de <img src="..."> en dur.
 $image_id = get_post_meta(get_the_ID(), 'mon_image', true);
-wp_get_attachment_image($image_id, 'large')
+// Vue : {!! wp_get_attachment_image($imageId(), 'large') !!}
 
 // Champ clonable (retourne un tableau)
 $items = get_post_meta(get_the_ID(), 'items', true);

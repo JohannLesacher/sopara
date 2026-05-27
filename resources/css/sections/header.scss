@@ -97,18 +97,6 @@
     display: none;
     align-self: center;
 
-    .nav-primary:has(> .is-active) {
-      a {
-        opacity: 0.65;
-      }
-
-      .is-active {
-        a {
-          opacity: 1;
-        }
-      }
-    }
-
     .menu-item {
       a {
         color: var(--banner-color);

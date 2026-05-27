@@ -45,6 +45,9 @@ export const initMegamenu = () => {
         })[c],
     );
 
+  const escapeHtmlWithLineBreak = (str = '') =>
+    String(str).split(/<br\s*\/?>/i).map(escapeHtml).join('<br/>');
+
   const parseChildren = (raw) => {
     try {
       const parsed = JSON.parse(raw || '[]');
@@ -72,11 +75,12 @@ export const initMegamenu = () => {
     const renderItems = (items) =>
       items
         .map((item) => {
+          console.log(item.label);
           const hasChildren =
             Array.isArray(item.children) && item.children.length > 0;
           return `
       <li class="megamenu-container__item megamenu-container__item--${escapeHtml(item.megamenu_style || 'classique')}">
-        ${item.megamenu_style !== 'invisible' ? `<a href="${escapeHtml(item.url)}">${escapeHtml(item.label)}</a>` : ''}
+        ${item.megamenu_style !== 'invisible' ? `<a href="${escapeHtml(item.url)}">${escapeHtmlWithLineBreak(item.label)}</a>` : ''}
         ${item.megamenu_style === 'bouton' ? `<a href="${escapeHtml(item.url)}" class="megamenu-container__item__button">${escapeHtml(item.megamenu_bouton)}</a>` : ''}
         ${hasChildren ? `<ul class="megamenu-container__sublist">${renderItems(item.children)}</ul>` : ''}
       </li>

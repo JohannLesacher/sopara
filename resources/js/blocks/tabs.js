@@ -12,7 +12,9 @@ class Tabs {
   }
 
   static setupMobileHeaderPreview(tabBlock) {
-    const wrappers = tabBlock.querySelectorAll('.block-tab-wrapper[data-mobile-header-preview]');
+    const wrappers = tabBlock.querySelectorAll(
+      '.block-tab-wrapper[data-mobile-header-preview]',
+    );
     if (!wrappers.length) return;
 
     const mq = window.matchMedia(this.MOBILE_MQ);
@@ -58,14 +60,29 @@ class Tabs {
       const panelId = `panel-${blockIndex}-${tabIndex}`;
 
       originalHeader.setAttribute('role', 'button');
-      originalHeader.setAttribute('aria-expanded', tabIndex === 0 ? 'true' : 'false');
+      originalHeader.setAttribute(
+        'aria-expanded',
+        tabIndex === 0 ? 'true' : 'false',
+      );
       originalHeader.setAttribute('aria-controls', panelId);
 
       const clonedHeader = originalHeader.cloneNode(true);
+      const clonedTitle = clonedHeader.querySelector(
+        '.block-tab__header-title',
+      );
+      if (clonedTitle) {
+        const span = document.createElement('span');
+        span.className = clonedTitle.className;
+        span.innerHTML = clonedTitle.innerHTML;
+        clonedTitle.replaceWith(span);
+      }
       clonedHeader.classList.add('block-tabs__nav-item');
       clonedHeader.setAttribute('role', 'tab');
       clonedHeader.setAttribute('id', tabId);
-      clonedHeader.setAttribute('aria-selected', tabIndex === 0 ? 'true' : 'false');
+      clonedHeader.setAttribute(
+        'aria-selected',
+        tabIndex === 0 ? 'true' : 'false',
+      );
       clonedHeader.setAttribute('tabindex', tabIndex === 0 ? '0' : '-1');
 
       wrapper.setAttribute('role', 'tabpanel');
@@ -82,7 +99,9 @@ class Tabs {
 
       clonedHeader.addEventListener('click', toggleFn);
       originalHeader.addEventListener('click', toggleFn);
-      clonedHeader.addEventListener('keydown', (e) => this.handleKeyboard(e, navContainer));
+      clonedHeader.addEventListener('keydown', (e) =>
+        this.handleKeyboard(e, navContainer),
+      );
 
       navContainer.appendChild(clonedHeader);
     });
@@ -132,7 +151,7 @@ class Tabs {
     const tabs = Array.from(navContainer.querySelectorAll('[role="tab"]'));
     const index = tabs.indexOf(document.activeElement);
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-      let nextIndex = (e.key === 'ArrowRight') ? index + 1 : index - 1;
+      let nextIndex = e.key === 'ArrowRight' ? index + 1 : index - 1;
       if (nextIndex >= tabs.length) nextIndex = 0;
       if (nextIndex < 0) nextIndex = tabs.length - 1;
       tabs[nextIndex].click();

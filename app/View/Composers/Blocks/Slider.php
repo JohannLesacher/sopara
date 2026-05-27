@@ -18,8 +18,9 @@ class Slider extends Composer {
 
         $data = [
             'data-per-page' => $attributes['perPage'] ?? 3,
+            'data-loop'     => ( $attributes['loop'] ?? false ) ? 'true' : 'false',
             'data-autoplay' => ( $attributes['autoplay'] ?? false ) ? 'true' : 'false',
-            'data-arrows' => ( $attributes['autoplay'] ?? false ) ? 'false' : 'true',
+            'data-arrows'   => ( $attributes['arrows'] ?? false ) ? 'true' : 'false',
         ];
 
         if ( isset( $attributes['perPageTablet'] ) ) {
@@ -52,6 +53,6 @@ class Slider extends Composer {
     public function showArrows(): bool {
         $attributes = $this->attributes();
 
-        return ! ( ( $attributes['loop'] ?? false ) );
+        return (bool) ($attributes['arrows'] ?? false);
     }
 }

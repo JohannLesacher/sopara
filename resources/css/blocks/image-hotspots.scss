@@ -1,9 +1,12 @@
 .block-image-hotspots {
   &__wrapper {
-    position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__image-area {
+    position: relative;
   }
 
   &__image {
@@ -12,69 +15,296 @@
     height: auto;
   }
 
-  &__point {
+  &__marker {
     position: absolute;
-    transform: translate(-50%, -50%);
     top: var(--y);
     left: var(--x);
-    z-index: 1;
-
-    &:has(.block-image-hotspots__marker[aria-expanded="true"]) {
-      z-index: 10;
-    }
-  }
-
-  &__marker {
-    position: relative;
+    transform: translate(-50%, -50%);
     width: 1.4rem;
     height: 1.4rem;
+    padding: 0;
     border-radius: 50%;
     background: var(--wp--preset--color--primary-0);
     border: 2px solid #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.15s ease;
     z-index: 1;
-    animation: hotspot-pulse 2.8s ease-in-out infinite;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: 50%;
-      background: radial-gradient(
-        circle,
-        var(--wp--preset--color--primary-0) 0%,
-        color-mix(in srgb, var(--wp--preset--color--primary-0) 50%, transparent) 45%,
-        transparent 75%
-      );
-      z-index: -1;
-      pointer-events: none;
-      animation: hotspot-radiate 2.8s ease-out infinite;
-    }
-
-    &:hover,
-    &:focus-visible {
-      transform: scale(1.1);
-      animation-play-state: paused;
-
-      &::after {
-        animation-play-state: paused;
-        opacity: 0;
-      }
-    }
 
     &[aria-expanded="true"] {
-      transform: scale(1.15);
-      animation-play-state: paused;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &__points {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__point {
+    position: relative;
+    width: 100%;
+    padding: 1.25rem 1.5rem 1.25rem 4rem;
+    border-radius: 6px;
+    background: var(--wp--preset--color--secondary-4);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 1.4rem;
+      left: 1.5rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      background: var(--wp--preset--color--primary-0);
+      border: 2px solid #fff;
+    }
+  }
+
+  &__panel {
+    position: static;
+    padding: 0;
+    background: transparent;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__close {
+    display: none;
+  }
+
+  &__panel-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--wp--preset--color--secondary-0);
+  }
+
+  &__body {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+  }
+
+  &__panel-toggle[aria-expanded="true"] ~ &__body {
+    max-height: 50rem;
+    opacity: 1;
+    margin-top: 0.5rem;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  &__cta {
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 991px) {
+    &__wrapper {
+      position: relative;
+      display: block;
+    }
+
+    &__marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      animation: hotspot-pulse 2.8s ease-in-out infinite;
 
       &::after {
-        animation: none;
-        opacity: 0;
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--wp--preset--color--primary-0) 0%,
+          color-mix(in srgb, var(--wp--preset--color--primary-0) 50%, transparent) 45%,
+          transparent 75%
+        );
+        z-index: -1;
+        pointer-events: none;
+        animation: hotspot-radiate 2.8s ease-out infinite;
       }
+
+      &:hover,
+      &:focus-visible {
+        transform: translate(-50%, -50%) scale(1.1);
+        animation-play-state: paused;
+
+        &::after {
+          animation-play-state: paused;
+          opacity: 0;
+        }
+      }
+
+      &[aria-expanded="true"] {
+        transform: translate(-50%, -50%) scale(1.15);
+        animation-play-state: paused;
+
+        &::after {
+          animation: none;
+          opacity: 0;
+        }
+      }
+    }
+
+    &__points {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      gap: 0;
+      pointer-events: none;
+    }
+
+    &__point {
+      position: absolute;
+      top: var(--y);
+      left: var(--x);
+      transform: translate(-50%, -50%);
+      width: auto;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      pointer-events: none;
+      z-index: 1;
+
+      &::before {
+        content: none;
+      }
+
+      &[data-open="true"] {
+        z-index: 10;
+      }
+    }
+
+    &__panel {
+      position: absolute;
+      width: 400px;
+      max-width: min(400px, 90vw);
+      padding: 2rem 2rem 2rem 5rem;
+      border-radius: 6px;
+      background: var(--wp--preset--color--secondary-4);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      z-index: 999;
+      top: -2rem;
+      left: -2rem;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        background: var(--wp--preset--color--primary-0);
+        border: 2px solid #fff;
+      }
+
+      &[data-pos-x="left"] {
+        left: auto;
+        right: -2rem;
+        padding-left: 2rem;
+        padding-right: 4rem;
+
+        &::before {
+          left: auto;
+          right: 2rem;
+        }
+      }
+
+      &[data-pos-y="top"] {
+        top: auto;
+        bottom: -2rem;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+
+        &::before {
+          top: auto;
+          bottom: 2rem;
+        }
+      }
+    }
+
+    &__point[data-open="true"] &__panel {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    &__close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--wp--preset--color--secondary-0);
+      font-size: 1.75rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.15s ease;
+
+      &:hover,
+      &:focus-visible {
+        background: rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    &__panel-toggle {
+      cursor: default;
+    }
+
+    &__title {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+    }
+
+    &__body {
+      max-height: none;
+      overflow: visible;
+      opacity: 1;
+      margin-top: 0;
+    }
+
+    &__panel-toggle[aria-expanded="true"] ~ &__body {
+      margin-top: 0;
     }
   }
 
@@ -86,215 +316,5 @@
   @keyframes hotspot-radiate {
     0%        { transform: scale(1);   opacity: 0.55; }
     70%, 100% { transform: scale(3);   opacity: 0; }
-  }
-
-  &__tooltip {
-    position: absolute;
-    width: 400px;
-    max-width: min(400px, 90vw);
-    padding: 2rem 2rem 2rem 5rem;
-    border-radius: 6px;
-    background: var(--wp--preset--color--secondary-4);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 999;
-    top: -2rem;
-    left: -2rem;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
-      width: 1.4rem;
-      height: 1.4rem;
-      border-radius: 50%;
-      background: var(--wp--preset--color--primary-0);
-      border: 2px solid #fff;
-      line-height: 0;
-      display: flex;
-      padding: 0;
-    }
-
-    &[data-pos-x="left"] {
-      left: auto;
-      right: -2rem;
-      padding-left: 2rem;
-      padding-right: 4rem;
-
-      &::before {
-        left: auto;
-        right: 2rem;
-      }
-    }
-
-    &[data-pos-y="top"] {
-      top: auto;
-      bottom: -2rem;
-      padding-top: 2rem;
-      padding-bottom: 4rem;
-
-      &::before {
-        top: auto;
-        bottom: 2rem;
-      }
-    }
-  }
-
-  &__tooltip-close {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 2rem;
-    height: 2rem;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: var(--wp--preset--color--secondary-0);
-    font-size: 1.75rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background 0.15s ease;
-
-    &:hover,
-    &:focus-visible {
-      background: rgba(0, 0, 0, 0.08);
-    }
-  }
-
-  &__tooltip-title {
-    margin: 0 0 1rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--wp--preset--color--secondary-0);
-  }
-
-  &__tooltip-text {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .wp-block-buttons {
-    margin-top: 1rem;
-  }
-
-  &--hover &__point:hover &__tooltip,
-  &--hover &__point:focus-within &__tooltip,
-  &__marker[aria-expanded="true"] + &__tooltip {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
-
-  &__mobile-list {
-    display: none;
-  }
-
-  @media (max-width: 990px) {
-    &__tooltip {
-      display: none;
-    }
-
-    &__marker {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.25s ease, visibility 0.25s ease;
-
-      &[aria-expanded="true"] {
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-
-    &__mobile-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      list-style: none;
-      margin: 1.5rem 0 0;
-      padding: 0;
-    }
-
-    &__mobile-card {
-      width: 100%;
-      text-align: left;
-      padding: 1.25rem 1.5rem 1.25rem 4rem;
-      border: none;
-      border-radius: 6px;
-      background: var(--wp--preset--color--secondary-4);
-      cursor: pointer;
-      position: relative;
-      font: inherit;
-      color: inherit;
-
-      &::before {
-        content: "";
-        position: absolute;
-        top: 1.4rem;
-        left: 1.5rem;
-        width: 1.4rem;
-        height: 1.4rem;
-        border-radius: 50%;
-        background: var(--wp--preset--color--primary-0);
-        border: 2px solid #fff;
-      }
-    }
-
-    &__mobile-title {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--wp--preset--color--secondary-0);
-    }
-
-    &__mobile-text {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.4;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
-    }
-
-    &__mobile-card[aria-expanded="true"] &__mobile-text {
-      max-height: 50rem;
-      opacity: 1;
-      margin-top: 0.5rem;
-    }
-
-    &__mobile-cta {
-      display: none;
-      margin-top: 0.75rem;
-      padding: 0.6rem 1.25rem;
-      border-radius: 4px;
-      background: var(--wp--preset--color--primary-0);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.2;
-      text-decoration: none;
-      width: fit-content;
-      align-self: flex-start;
-    }
-
-    &__mobile-item:has(.block-image-hotspots__mobile-card[aria-expanded="true"]) &__mobile-cta {
-      display: inline-block;
-    }
-
-    &__mobile-item {
-      display: flex;
-      flex-direction: column;
-    }
   }
 }

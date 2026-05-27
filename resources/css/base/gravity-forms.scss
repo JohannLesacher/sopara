@@ -1,0 +1,26 @@
+.gform-theme.gform-theme--framework.gform_wrapper {
+  --gf-form-gap-x: 2rem;
+  --gf-form-gap-y: 1rem;
+  --gf-ctrl-label-font-size-primary: var(--wp--preset--font-size--regular);
+  --gf-ctrl-radius: 0;
+  --gf-ctrl-shadow: none;
+
+  textarea,
+  input[type] {
+    --gf-ctrl-border-color: var(--wp--preset--color--secondary-3);
+  }
+
+  .gform_button,
+  button[type="submit"] {
+    --gf-ctrl-btn-padding-y: 0.75rem;
+    --gf-ctrl-btn-padding-x: 2.5rem;
+    --gf-ctrl-btn-font-weight: 500;
+    --gf-ctrl-btn-font-size: var(--wp--preset--font-size--regular);
+    --gf-ctrl-btn-font-family: var(--wp--preset--font-family--figtree);
+    --gf-ctrl-btn-radius: 10rem;
+  }
+}
+
+.gform_heading {
+  display: none;
+}
