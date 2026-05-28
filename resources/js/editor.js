@@ -14,5 +14,6 @@ import '@scripts/admin/buttons';
 import '@scripts/admin/accordion';
 import '@scripts/admin/list';
 import '@scripts/admin/cover';
+import '@scripts/admin/table';
 import '@scripts/admin/font-styles';
 

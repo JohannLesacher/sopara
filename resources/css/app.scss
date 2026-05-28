@@ -6,6 +6,7 @@
 @use "base/global";
 @use "base/animation";
 @use "base/gravity-forms";
+@use "base/horizontal-scroll";
 
 @use "sections/header";
 @use "sections/footer";
@@ -20,3 +21,4 @@
 @use "blocks/heading";
 @use "blocks/list";
 @use "blocks/cover";
+@use "blocks/table";

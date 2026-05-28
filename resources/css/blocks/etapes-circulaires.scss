@@ -17,7 +17,7 @@
   &__stage {
     display: grid;
     column-gap: clamp(2rem, 6vw, 6rem);
-    row-gap: clamp(2rem, 5vw, 4rem);
+    row-gap: clamp(1.5rem, 3.5vw, 3rem);
     align-items: center;
     max-width: 1100px;
     margin: 0 auto;
@@ -110,6 +110,7 @@
       justify-self: end;
     }
 
+    &[data-side='top'],
     &[data-side='bottom'] {
       justify-self: center;
     }

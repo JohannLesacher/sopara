@@ -3,11 +3,18 @@ import { animate, stagger } from 'animejs';
 const MOBILE_BREAKPOINT = 991;
 const RING_GAP_DEG = 6;
 const HOVER_DURATION = 350;
-const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const PREFERS_REDUCED_MOTION = window.matchMedia(
+  '(prefers-reduced-motion: reduce)',
+).matches;
 
 const segmentLength = (count) => ((360 / count - RING_GAP_DEG) / 360) * 100;
 
-const angleFor = (index, count) => (360 / count) * (index + 0.5);
+const angleFor = (index, count) => {
+  if (count === 6) {
+    return ((index + 1) * 60) % 360;
+  }
+  return (360 / count) * (index + 0.5);
+};
 
 const offsetForIndex = (index, count) => {
   const angle = angleFor(index, count);
@@ -21,15 +28,25 @@ class EtapesCirculaires {
     this.count = parseInt(root.dataset.count, 10) || 0;
     if (this.count < 2) return;
 
-    this.nums = Array.from(root.querySelectorAll('.block-etapes-circulaires__num'));
-    this.boxes = Array.from(root.querySelectorAll('.block-etapes-circulaires__box'));
+    this.nums = Array.from(
+      root.querySelectorAll('.block-etapes-circulaires__num'),
+    );
+    this.boxes = Array.from(
+      root.querySelectorAll('.block-etapes-circulaires__box'),
+    );
     this.image = root.querySelector('.block-etapes-circulaires__image');
     this.ring = root.querySelector('.block-etapes-circulaires__ring');
     this.arc = root.querySelector('.block-etapes-circulaires__ring-arc');
     this.base = root.querySelector('.block-etapes-circulaires__ring-base');
-    this.mobilePanel = root.querySelector('.block-etapes-circulaires__mobile-panel');
-    this.mobileTitre = root.querySelector('.block-etapes-circulaires__mobile-titre');
-    this.mobileTexte = root.querySelector('.block-etapes-circulaires__mobile-texte');
+    this.mobilePanel = root.querySelector(
+      '.block-etapes-circulaires__mobile-panel',
+    );
+    this.mobileTitre = root.querySelector(
+      '.block-etapes-circulaires__mobile-titre',
+    );
+    this.mobileTexte = root.querySelector(
+      '.block-etapes-circulaires__mobile-texte',
+    );
 
     this.activeIndex = 0;
     this.revealed = false;
@@ -56,8 +73,16 @@ class EtapesCirculaires {
     if (this.arc) {
       const segLen = segmentLength(this.count);
       this.arc.setAttribute('stroke-dasharray', `${segLen} ${100 - segLen}`);
-      this.arc.setAttribute('stroke-dashoffset', offsetForIndex(this.activeIndex, this.count));
+      this.currentOffset = offsetForIndex(this.activeIndex, this.count);
+      this.arc.setAttribute('stroke-dashoffset', this.currentOffset);
     }
+  }
+
+  shortestOffset(target) {
+    let next = target;
+    while (next - this.currentOffset > 50) next -= 100;
+    while (next - this.currentOffset < -50) next += 100;
+    return next;
   }
 
   measureBoxes() {
@@ -194,7 +219,8 @@ class EtapesCirculaires {
     });
 
     if (this.arc) {
-      const target = offsetForIndex(index, this.count);
+      const target = this.shortestOffset(offsetForIndex(index, this.count));
+      this.currentOffset = target;
       animate(this.arc, {
         strokeDashoffset: target,
         duration: 500,
@@ -211,8 +237,10 @@ class EtapesCirculaires {
     if (!this.mobilePanel) return;
     const item = this.boxes[this.activeIndex];
     if (!item) return;
-    this.mobileTitre.innerHTML = item.querySelector('.block-etapes-circulaires__titre')?.innerHTML || '';
-    this.mobileTexte.innerHTML = item.querySelector('.block-etapes-circulaires__texte')?.innerHTML || '';
+    this.mobileTitre.innerHTML =
+      item.querySelector('.block-etapes-circulaires__titre')?.innerHTML || '';
+    this.mobileTexte.innerHTML =
+      item.querySelector('.block-etapes-circulaires__texte')?.innerHTML || '';
   }
 
   swapMobile() {
@@ -313,7 +341,9 @@ class EtapesCirculaires {
 }
 
 const init = () => {
-  document.querySelectorAll('.block-etapes-circulaires').forEach((el) => new EtapesCirculaires(el));
+  document
+    .querySelectorAll('.block-etapes-circulaires')
+    .forEach((el) => new EtapesCirculaires(el));
 };
 
 if (document.readyState === 'loading') {

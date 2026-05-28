@@ -53,6 +53,10 @@ class EtapesCirculaires extends Composer
 
     public function imageStyle(): string
     {
+        if ($this->count() === 6) {
+            return 'grid-area: 2 / 2 / 4 / 3;';
+        }
+
         $sideRows = $this->sideRows();
 
         return sprintf('grid-area: 1 / 2 / %d / 3;', $sideRows + 1);
@@ -62,6 +66,11 @@ class EtapesCirculaires extends Composer
     {
         $etapes = $this->etapes();
         $count = count($etapes);
+
+        if ($count === 6) {
+            return $this->itemsSix($etapes);
+        }
+
         $sideRows = $this->sideRows();
         $totalRows = $this->totalRows();
         $odd = $count % 2 === 1;
@@ -89,14 +98,48 @@ class EtapesCirculaires extends Composer
             $rad = deg2rad($angleDeg);
 
             $items[] = [
-                'index'    => $i,
-                'titre'    => $etape['titre'] ?? '',
-                'texte'    => $etape['texte'] ?? '',
-                'num'      => str_pad((string) $step, 2, '0', STR_PAD_LEFT),
-                'side'     => $side,
+                'index' => $i,
+                'titre' => $etape['titre'] ?? '',
+                'texte' => $etape['texte'] ?? '',
+                'num' => str_pad((string) $step, 2, '0', STR_PAD_LEFT),
+                'side' => $side,
                 'boxStyle' => sprintf('grid-area: %d / %d / %d / %d;', $row, $col, $row + 1, $col + 1),
-                'nx'       => round(sin($rad), 4),
-                'ny'       => round(-cos($rad), 4),
+                'nx' => round(sin($rad), 4),
+                'ny' => round(-cos($rad), 4),
+            ];
+        }
+
+        return $items;
+    }
+
+    private function itemsSix(array $etapes): array
+    {
+        $layout = [
+            1 => ['row' => 2, 'col' => 3, 'side' => 'right'],
+            2 => ['row' => 3, 'col' => 3, 'side' => 'right'],
+            3 => ['row' => 4, 'col' => 2, 'side' => 'bottom'],
+            4 => ['row' => 3, 'col' => 1, 'side' => 'left'],
+            5 => ['row' => 2, 'col' => 1, 'side' => 'left'],
+            6 => ['row' => 1, 'col' => 2, 'side' => 'top'],
+        ];
+
+        $items = [];
+
+        foreach ($etapes as $i => $etape) {
+            $step = $i + 1;
+            $cfg = $layout[$step];
+            $angleDeg = (60 * $step) % 360;
+            $rad = deg2rad($angleDeg);
+
+            $items[] = [
+                'index' => $i,
+                'titre' => $etape['titre'] ?? '',
+                'texte' => $etape['texte'] ?? '',
+                'num' => str_pad((string) $step, 2, '0', STR_PAD_LEFT),
+                'side' => $cfg['side'],
+                'boxStyle' => sprintf('grid-area: %d / %d / %d / %d;', $cfg['row'], $cfg['col'], $cfg['row'] + 1, $cfg['col'] + 1),
+                'nx' => round(sin($rad), 4),
+                'ny' => round(-cos($rad), 4),
             ];
         }
 
@@ -114,6 +157,10 @@ class EtapesCirculaires extends Composer
     private function totalRows(): int
     {
         $count = $this->count();
+
+        if ($count === 6) {
+            return 4;
+        }
 
         return $this->sideRows() + ($count % 2 === 1 ? 1 : 0);
     }

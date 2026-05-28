@@ -1093,6 +1093,56 @@ animate(target, {
 
 ---
 
+## 13b. Scroll horizontal (système global)
+
+Le thème embarque un système de scroll horizontal réutilisable : au scroll vertical, un contenu plus large que le viewport se translate horizontalement dans un wrapper `position: sticky`. Activé uniquement ≥ 1000px.
+
+### Fichiers
+
+| Fichier | Rôle |
+|---------|------|
+| `resources/js/global/horizontal-scroll.js` | Classe `HorizontalScroll` + `initHorizontalScroll()` |
+| `resources/css/base/horizontal-scroll.scss` | Styles `.horizontal-scroll` (BEM) |
+
+Déjà importés dans `app.js` et `app.scss`. Pas besoin de les enqueuer par bloc.
+
+### HTML attendu
+
+```html
+<div class="horizontal-scroll" js-horizontal-scroll>
+  <div class="horizontal-scroll__wrapper" js-horizontal-scroll_wrapper>
+    <div class="horizontal-scroll__view" js-horizontal-scroll_view>
+      <!-- Items horizontaux -->
+      <div class="item">…</div>
+      <div class="item">…</div>
+    </div>
+    <div class="horizontal-scroll__scrollbar"></div>
+  </div>
+  <div class="horizontal-scroll__scroller" js-horizontal-scroll_scroller></div>
+</div>
+```
+
+Les 4 attributs `js-horizontal-scroll*` sont obligatoires. Le `__scroller` est vide — sa hauteur (`200vh`/`250vh`) détermine la durée du défilement horizontal.
+
+### Variables CSS pilotées par le JS
+
+| Variable | Cible | Rôle |
+|---|---|---|
+| `--transformation` | `.horizontal-scroll__view` | Translation horizontale en `px` (négative) |
+| `--scrollbar` | `::after` de `.horizontal-scroll__scrollbar` | Largeur barre de progression (`0%` → `100%`) |
+
+### Intégration dans un bloc
+
+1. Dans la vue Blade, reproduire la structure HTML avec les attributs `js-*`
+2. Les classes des items (largeurs en `vw`, `white-space`, etc.) se définissent dans le SCSS du bloc — pas dans `horizontal-scroll.scss`
+3. La hauteur du `__scroller` peut être overridée en SCSS du bloc si la vitesse par défaut ne convient pas
+
+### Comportement mobile
+
+Sous 1000px : JS inactif (`matchMedia` check), scrollbar et scroller `display: none`, view perd son `inline-flex`. Prévoir un layout vertical des items dans le SCSS du bloc.
+
+---
+
 ## 14. Champs custom sur les éléments de menu (nav menu items)
 
 Quand on a besoin d'ajouter des options au menu WP (image, style de rendu, flag…), respecter la séparation Sage : **Service** + **Provider** + **Blade** + **JS séparé**. Jamais de HTML inline en PHP, jamais de jQuery, jamais d'`add_action` dans `app/filters.php` pour ce genre de feature.
