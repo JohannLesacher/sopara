@@ -88,6 +88,10 @@ class Slider {
       });
 
       splide.mount(autoplay ? { AutoScroll, Intersection } : {});
+
+      document.addEventListener('tabChanged', () => {
+        splide.refresh();
+      })
     });
   }
 }

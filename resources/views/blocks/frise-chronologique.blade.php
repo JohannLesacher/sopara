@@ -54,7 +54,6 @@
                     @endforeach
                 </div>
             </div>
-            <div class="horizontal-scroll__scroller" js-horizontal-scroll_scroller></div>
         </div>
     @endif
 </section>

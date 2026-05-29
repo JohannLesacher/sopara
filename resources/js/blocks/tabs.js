@@ -12,6 +12,8 @@ class Tabs {
   }
 
   static setupMobileHeaderPreview(tabBlock) {
+    if (tabBlock.classList.contains('is-style-pills')) return;
+
     const wrappers = tabBlock.querySelectorAll(
       '.block-tab-wrapper[data-mobile-header-preview]',
     );
@@ -112,7 +114,8 @@ class Tabs {
   static switchTab(tabBlock, targetIndex) {
     const navItems = tabBlock.querySelectorAll('.block-tabs__nav-item');
     const wrappers = tabBlock.querySelectorAll('.block-tab-wrapper');
-    const isMobile = window.innerWidth < 1100;
+    const isPills = tabBlock.classList.contains('is-style-pills');
+    const isMobile = !isPills && window.innerWidth < 1100;
 
     wrappers.forEach((wrapper, idx) => {
       const navItem = navItems[idx];

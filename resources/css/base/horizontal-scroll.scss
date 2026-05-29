@@ -8,9 +8,11 @@
 
     @media (min-width: 1000px) {
       height: 100vh;
-      padding: 7rem 0;
+      padding: 4rem 0;
       position: sticky;
       top: 0;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -19,9 +21,8 @@
       display: inline-flex;
       align-items: stretch;
       flex-wrap: nowrap;
-      white-space: nowrap;
       gap: 10px;
-      height: 100%;
+      max-height: 100%;
       overflow: clip;
       transform: translateX(var(--transformation));
       transition: transform 0.5s cubic-bezier(0, 0, 0, 1);
@@ -34,12 +35,8 @@
 
   &__scroller {
     grid-column: span 12;
-    height: 200vh;
+    height: var(--scroller-height, 200vh);
     margin: 25vh 0 0;
-
-    @media (min-width: 1220px) {
-      height: 250vh;
-    }
 
     @media (max-width: 999px) {
       display: none;

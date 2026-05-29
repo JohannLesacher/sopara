@@ -1,3 +1,26 @@
+.horizontal-scroll--galery {
+  @media (min-width: 1000px) {
+    --galery-col-width: calc((var(--content-width) - 1.5dvw * 3) / 4);
+  }
+
+  &.alignfull {
+    --galery-padding-start: var(--container-padding);
+
+    @media (min-width: 769px) {
+      --galery-padding-start: calc(
+        max(var(--container-padding), (100dvw - var(--wide-width)) / 2)
+        + (var(--wide-width) - var(--content-width)) / 2
+      );
+    }
+  }
+
+  .horizontal-scroll__wrapper {
+    @media (min-width: 1000px) {
+      margin-inline: var(--galery-padding-start, 0);
+    }
+  }
+}
+
 .wp-block-group {
   &.is-style-3-columns-grid {
     grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
@@ -15,39 +38,97 @@
     }
   }
 
+  //&.is-style-galery-grid {
+  //  grid-template-columns: 1fr;
+  //  grid-gap: 2rem;
+  //  grid-auto-rows: 250px;
+  //
+  //  @media screen and (min-width: 990px) {
+  //    grid-template-columns: 1fr 1fr 1fr 1fr;
+  //    grid-template-rows: 275px 150px 275px;
+  //    grid-gap: 1.5dvw;
+  //
+  //    > *:nth-child(1) {
+  //      grid-column: 1 / span 2;
+  //      grid-row: 1 / span 2;
+  //    }
+  //
+  //    > *:nth-child(2) {
+  //      grid-column: 3 / span 2;
+  //      grid-row: 1;
+  //    }
+  //
+  //    > *:nth-child(3) {
+  //      grid-column: 1;
+  //      grid-row: 3;
+  //    }
+  //
+  //    > *:nth-child(4) {
+  //      grid-column: 2;
+  //      grid-row: 3;
+  //    }
+  //
+  //    > *:nth-child(5) {
+  //      grid-column: 3 / span 2;
+  //      grid-row: 2 / span 2;
+  //    }
+  //  }
+  //}
+
   &.is-style-galery-grid {
     grid-template-columns: 1fr;
     grid-gap: 2rem;
     grid-auto-rows: 250px;
 
-    @media screen and (min-width: 990px) {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      grid-template-rows: 275px 150px 275px;
-      grid-gap: 2.5dvw;
+    &.horizontal-scroll__view {
+      padding: 4rem 1.5rem;
 
-      > *:nth-child(1) {
-        grid-column: 1 / span 2;
+      @media (min-width: 1000px) {
+        padding: 0;
+        display: grid;
+        width: max-content;
+        grid-template-columns: repeat(var(--galery-cols, 4), var(--galery-col-width));
+      }
+    }
+
+    @media screen and (min-width: 1000px) {
+      grid-template-columns: repeat(4, calc(25% - 1.5dvw * 3 / 4));
+      grid-template-rows: 27.5dvh 15dvh 27.5dvh;
+      grid-gap: 1.5dvw;
+
+      > *:nth-child(odd) {
+        grid-column: span 2;
         grid-row: 1 / span 2;
       }
-
-      > *:nth-child(2) {
-        grid-column: 3 / span 2;
-        grid-row: 1;
-      }
-
-      > *:nth-child(3) {
-        grid-column: 1;
+      > *:nth-child(even) {
+        grid-column: span 2;
         grid-row: 3;
       }
 
-      > *:nth-child(4) {
-        grid-column: 2;
-        grid-row: 3;
-      }
+      @for $i from 0 through 1 {
+        $n: $i * 5;
+        $col: $i * 4;
 
-      > *:nth-child(5) {
-        grid-column: 3 / span 2;
-        grid-row: 2 / span 2;
+        > *:nth-child(#{$n + 1}) {
+          grid-column: #{$col + 1} / span 2;
+          grid-row: 1 / span 2;
+        }
+        > *:nth-child(#{$n + 2}) {
+          grid-column: #{$col + 3} / span 2;
+          grid-row: 1;
+        }
+        > *:nth-child(#{$n + 3}) {
+          grid-column: #{$col + 1};
+          grid-row: 3;
+        }
+        > *:nth-child(#{$n + 4}) {
+          grid-column: #{$col + 2};
+          grid-row: 3;
+        }
+        > *:nth-child(#{$n + 5}) {
+          grid-column: #{$col + 3} / span 2;
+          grid-row: 2 / span 2;
+        }
       }
     }
   }
@@ -60,8 +141,8 @@
       gap: 2rem;
       flex-wrap: nowrap;
 
-      > *:first-child {
-        //flex-shrink: 0; // TODO
+      > .wp-block-image:first-child {
+        flex-shrink: 0;
       }
     }
   }

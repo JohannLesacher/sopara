@@ -5,6 +5,7 @@
   isolation: isolate;
   border-radius: 6px;
   background-color: var(--wp--preset--color--secondary-0);
+  height: 100%;
 
   &__media {
     position: absolute;
@@ -31,6 +32,7 @@
     background-color: rgba(0, 0, 0, 0.55);
     color: var(--wp--preset--color--white);
     opacity: 0;
+    height: 100%;
     transition: opacity 0.4s ease;
   }
 

@@ -1,5 +1,6 @@
 const BREAKPOINT = 768;
 const SELECTOR = '.sync-element-heights';
+const EXCLUDE_CLASS = 'exclude-from-sync-element-heights';
 
 const groups = new Map();
 let rafId = null;
@@ -9,13 +10,35 @@ const NO_DESCEND_TAGS = new Set(['UL', 'OL']);
 const canDescend = (members) =>
   members.every((el) => !NO_DESCEND_TAGS.has(el.tagName));
 
-const buildLevel = (containers) => {
+const EXCLUDED_SELECTORS = ['div.wp-block-button'];
+
+const isExcluded = (el) =>
+  el.classList.contains(EXCLUDE_CLASS) ||
+  EXCLUDED_SELECTORS.some((sel) => el.matches(sel));
+
+// Elements that already carry a min-height (from CSS or markup) before the
+// script runs. We never overwrite their min-height — they keep their own.
+const locked = new WeakSet();
+
+const hasOwnMinHeight = (el) =>
+  parseFloat(window.getComputedStyle(el).minHeight) > 0;
+
+const buildLevel = (rawContainers) => {
+  const containers = rawContainers.filter((c) => !isExcluded(c));
+  if (containers.length === 0) return [];
+
   const rowCount = Math.min(...containers.map((c) => c.children.length));
   if (!Number.isFinite(rowCount) || rowCount === 0) return [];
 
   const rows = [];
   for (let i = 0; i < rowCount; i++) {
-    const members = containers.map((c) => c.children[i]);
+    const members = containers
+      .map((c) => c.children[i])
+      .filter((el) => !isExcluded(el));
+    if (members.length === 0) continue;
+    members.forEach((el) => {
+      if (hasOwnMinHeight(el)) locked.add(el);
+    });
     const subRows = canDescend(members) ? buildLevel(members) : [];
     rows.push({ members, subRows });
   }
@@ -25,7 +48,8 @@ const buildLevel = (containers) => {
 const resetRows = (rows) => {
   rows.forEach((row) => {
     row.members.forEach((el) => {
-      el.style.height = '';
+      if (locked.has(el)) return;
+      el.style.minHeight = '';
     });
     resetRows(row.subRows);
   });
@@ -38,14 +62,15 @@ const applyRows = (rows) => {
       0,
     );
     row.members.forEach((el) => {
-      el.style.height = `${max}px`;
+      if (locked.has(el)) return;
+      el.style.minHeight = `${max}px`;
     });
     applyRows(row.subRows);
   });
 };
 
 const sync = (group) => {
-  if (window.innerWidth < BREAKPOINT) {
+  if (!group.alwaysSync && window.innerWidth < BREAKPOINT) {
     resetRows(group.rows);
     return;
   }
@@ -64,7 +89,15 @@ const schedule = () => {
   rafId = requestAnimationFrame(syncAll);
 };
 
-const observe = (container) => {
+const resolveSyncContainer = (el) =>
+  el.classList.contains('splide') ? el.querySelector('.splide__list') : el;
+
+const observe = (rawContainer) => {
+  const container = resolveSyncContainer(rawContainer);
+  if (!container) return;
+
+  const alwaysSync = rawContainer.classList.contains('splide');
+
   const rows = buildLevel(Array.from(container.children));
   if (rows.length === 0) return;
 
@@ -79,7 +112,7 @@ const observe = (container) => {
 
   observer.observe(container);
 
-  const group = { rows, observer };
+  const group = { rows, observer, alwaysSync };
   groups.set(container, group);
   sync(group);
 };
@@ -101,5 +134,7 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+document.addEventListener('tabChanged', schedule);
 
 export { observe, destroy };

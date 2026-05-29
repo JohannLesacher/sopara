@@ -49,6 +49,10 @@ class Common extends Composer {
             $classNames = $matches[1];
         }
 
+        if ( preg_match( '/align="([^"]+)"/', $attributesParsed, $matches ) ) {
+            $classNames .= ' align' . $matches[1];
+        }
+
         return $classNames;
     }
 

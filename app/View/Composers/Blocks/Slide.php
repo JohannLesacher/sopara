@@ -19,6 +19,12 @@ class Slide extends Composer {
 
     public function classeNames(): array {
         $classes = [ 'splide__slide', 'block-slide' ];
+        $attributes = $this->attributes();
+
+        if ( ! empty( $attributes['className'] ) ) {
+            $classes[] = $attributes['className'];
+        }
+
         if ( $this->animated() ) {
             $classes[] = 'is-animated is-animated--slide';
         }

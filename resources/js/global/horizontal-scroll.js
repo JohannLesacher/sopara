@@ -26,7 +26,8 @@ class HorizontalScroll {
   measure() {
     this.viewWidth = this.view.getBoundingClientRect().width;
     this.wrapperWidth = this.wrapper.getBoundingClientRect().width;
-    this.maxTranslation = this.viewWidth - this.wrapperWidth;
+    this.maxTranslation = Math.max(0, this.viewWidth - this.wrapperWidth);
+    this.el.style.setProperty('--scroller-height', `${this.maxTranslation}px`);
   }
 
   update() {
