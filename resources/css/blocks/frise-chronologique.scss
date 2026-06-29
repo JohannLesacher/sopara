@@ -27,6 +27,14 @@
       gap: 1rem;
       padding: 2rem 0 1rem;
 
+      .has-arrows-above & {
+        position: absolute;
+        top: 15%;
+        transform: translateY(-50%);
+        justify-content: space-between;
+        padding: 0 1.5rem;
+      }
+
       .splide__arrow {
         position: relative;
         top: 0;
@@ -35,7 +43,6 @@
         bottom: 0;
         transform: none;
         opacity: 1;
-        background-color: var(--wp--preset--color--white);
         width: 3em;
         height: 3em;
 

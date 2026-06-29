@@ -11,10 +11,21 @@ class ImageHotspots extends Composer {
         return $this->view->getData()['data'] ?? [];
     }
 
-    function image() {
+    function imageId() {
         $data = $this->getData();
 
         return $data['image'] ?? null;
+    }
+
+    function imageAlt() {
+        $data    = $this->getData();
+        $imageId = $data['image'] ?? null;
+
+        if ( ! $imageId ) {
+            return null;
+        }
+
+        return get_post_meta( $imageId, '_wp_attachment_image_alt', true );
     }
 
     function points() {

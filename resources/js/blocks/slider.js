@@ -2,6 +2,14 @@ import Splide from '@splidejs/splide';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 import { Intersection } from '@splidejs/splide-extension-intersection';
 
+function debounce(fn, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), wait);
+  };
+}
+
 class Slider {
   static getSlidePadding(el) {
     return parseFloat(
@@ -89,9 +97,47 @@ class Slider {
 
       splide.mount(autoplay ? { AutoScroll, Intersection } : {});
 
-      document.addEventListener('tabChanged', () => {
+      // refresh() efface les styles inline posés par les animations d'entrée
+      // (anime.js) -> .is-animated{opacity:0} reprend et les slides disparaissent.
+      // On restaure l'état visible des slides déjà animées (marquées data-animated,
+      // marqueur qui survit au refresh et au clonage Splide).
+      const restoreAnimated = () => {
+        splide.root
+          .querySelectorAll('.is-animated--slide[data-animated]')
+          .forEach((el) => {
+            el.style.opacity = '1';
+            el.style.transform = '';
+          });
+      };
+
+      const refresh = () => {
         splide.refresh();
-      })
+        restoreAnimated();
+      };
+
+      document.addEventListener('tabChanged', refresh);
+
+      const onResize = debounce(() => {
+        const padding = Slider.getSlidePadding(container) ?? 0;
+
+        splide.options = {
+          padding: { left: padding, right: padding },
+          breakpoints: {
+            1024: {
+              perPage: perPageTablet,
+              padding: { left: padding, right: padding * 2 },
+            },
+            640: {
+              perPage: perPageMobile,
+              padding: { left: padding, right: padding * 3 },
+            },
+          },
+        };
+
+        refresh();
+      }, 150);
+
+      window.addEventListener('resize', onResize);
     });
   }
 }

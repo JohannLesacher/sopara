@@ -57,6 +57,7 @@ class SliderColumns {
     const isMobile = window.matchMedia(SliderColumns.MEDIA_QUERY).matches;
     if (isMobile && !this.isMounted) this.mount();
     else if (!isMobile && this.isMounted) this.unmount();
+    else if (isMobile && this.isMounted) this.splide?.refresh();
   }
 
   destroy() {

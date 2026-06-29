@@ -21,6 +21,7 @@ class Slider extends Composer {
             'data-loop'     => ( $attributes['loop'] ?? false ) ? 'true' : 'false',
             'data-autoplay' => ( $attributes['autoplay'] ?? false ) ? 'true' : 'false',
             'data-arrows'   => ( $attributes['arrows'] ?? false ) ? 'true' : 'false',
+            'aria-label' => $attributes['titre'] ?? 'Slider',
         ];
 
         if ( isset( $attributes['perPageTablet'] ) ) {

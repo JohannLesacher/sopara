@@ -28,17 +28,57 @@
       <div class="site-footer__navs">
         @if($nav['left'])
           <nav class="site-footer__nav">
-            @foreach($nav['left'] as $item)
-              <a href="{!! $item->url !!}" class="{{ $item->active ? 'is-active' : '' }}">{!! $item->label !!}</a>
-            @endforeach
+            <ul>
+              @foreach($nav['left'] as $item)
+                <li>
+                  @php
+                    $tag = $item->url !== '#' ? 'a' : 'span';
+                  @endphp
+                  <{{$tag}} href="{!! $item->url !!}"
+                  class="{{ $item->active ? 'is-active' : '' }} {{ $item->children ? 'has-children' : '' }}">
+                    {!! $item->label !!}
+                  </{{$tag}}>
+                  <ul>
+                    @foreach($item->children as $itemChildren)
+                      <li>
+                        <a href="{!! $itemChildren->url !!}"
+                           class="{{ $itemChildren->active ? 'is-active' : '' }}">
+                          {!! $itemChildren->label !!}
+                        </a>
+                      </li>
+                    @endforeach
+                  </ul>
+                </li>
+              @endforeach
+            </ul>
           </nav>
         @endif
 
         @if($nav['right'])
           <nav class="site-footer__nav">
-            @foreach($nav['right'] as $item)
-              <a href="{!! $item->url !!}" class="{{ $item->active ? 'is-active' : '' }}">{!! $item->label !!}</a>
-            @endforeach
+            <ul>
+              @foreach($nav['right'] as $item)
+                <li>
+                  @php
+                    $tag = $item->url !== '#' ? 'a' : 'span';
+                  @endphp
+                  <{{$tag}} href="{!! $item->url !!}"
+                     class="{{ $item->active ? 'is-active' : '' }} {{ $item->children ? 'has-children' : '' }}">
+                    {!! $item->label !!}
+                  </{{$tag}}>
+                  <ul>
+                    @foreach($item->children as $itemChildren)
+                      <li>
+                        <a href="{!! $itemChildren->url !!}"
+                           class="{{ $itemChildren->active ? 'is-active' : '' }}">
+                          {!! $itemChildren->label !!}
+                        </a>
+                      </li>
+                    @endforeach
+                  </ul>
+                </li>
+              @endforeach
+            </ul>
           </nav>
         @endif
 

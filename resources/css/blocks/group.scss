@@ -75,60 +75,125 @@
   //  }
   //}
 
+  //&.is-style-galery-grid {
+  //  grid-template-columns: 1fr;
+  //  grid-gap: 2rem;
+  //  grid-auto-rows: 250px;
+  //
+  //  &.horizontal-scroll__view {
+  //    padding: 4rem 1.5rem;
+  //
+  //    @media (min-width: 1000px) {
+  //      padding: 0;
+  //      display: grid;
+  //      width: max-content;
+  //      grid-template-columns: repeat(var(--galery-cols, 4), var(--galery-col-width));
+  //    }
+  //  }
+  //
+  //  @media screen and (min-width: 1000px) {
+  //    grid-template-columns: repeat(4, calc(25% - 1.5dvw * 3 / 4));
+  //    grid-template-rows: 27.5dvh 15dvh 27.5dvh;
+  //    grid-gap: 1.5dvw;
+  //
+  //    > *:nth-child(odd) {
+  //      grid-column: span 2;
+  //      grid-row: 1 / span 2;
+  //    }
+  //    > *:nth-child(even) {
+  //      grid-column: span 2;
+  //      grid-row: 3;
+  //    }
+  //
+  //    @for $i from 0 through 1 {
+  //      $n: $i * 5;
+  //      $col: $i * 4;
+  //
+  //      > *:nth-child(#{$n + 1}) {
+  //        grid-column: #{$col + 1} / span 2;
+  //        grid-row: 1 / span 2;
+  //      }
+  //      > *:nth-child(#{$n + 2}) {
+  //        grid-column: #{$col + 3} / span 2;
+  //        grid-row: 1;
+  //      }
+  //      > *:nth-child(#{$n + 3}) {
+  //        grid-column: #{$col + 1};
+  //        grid-row: 3;
+  //      }
+  //      > *:nth-child(#{$n + 4}) {
+  //        grid-column: #{$col + 2};
+  //        grid-row: 3;
+  //      }
+  //      > *:nth-child(#{$n + 5}) {
+  //        grid-column: #{$col + 3} / span 2;
+  //        grid-row: 2 / span 2;
+  //      }
+  //    }
+  //  }
+  //}
+
+  //&.is-style-galery-grid {
+  //  grid-template-columns: 1fr;
+  //  grid-gap: 2rem;
+  //  grid-auto-rows: 250px;
+  //
+  //  @media screen and (min-width: 990px) {
+  //    grid-template-columns: 1fr 1fr 1fr 1fr;
+  //    grid-template-rows: repeat(var(--gallery-groups, 2), 275px 150px 275px);
+  //    grid-gap: 1.5dvw;
+  //
+  //    @for $i from 0 through 1 {
+  //      $n: $i * 5;
+  //      $r: $i * 3;
+  //
+  //      > *:nth-child(#{$n + 1}) {
+  //        grid-column: 1 / span 2;
+  //        grid-row: #{$r + 1} / span 2;
+  //      }
+  //      > *:nth-child(#{$n + 2}) {
+  //        grid-column: 3 / span 2;
+  //        grid-row: #{$r + 1};
+  //      }
+  //      > *:nth-child(#{$n + 3}) {
+  //        grid-column: 1;
+  //        grid-row: #{$r + 3};
+  //      }
+  //      > *:nth-child(#{$n + 4}) {
+  //        grid-column: 2;
+  //        grid-row: #{$r + 3};
+  //      }
+  //      > *:nth-child(#{$n + 5}) {
+  //        grid-column: 3 / span 2;
+  //        grid-row: #{$r + 2} / span 2;
+  //      }
+  //    }
+  //  }
+  //}
+
   &.is-style-galery-grid {
     grid-template-columns: 1fr;
     grid-gap: 2rem;
     grid-auto-rows: 250px;
 
-    &.horizontal-scroll__view {
-      padding: 4rem 1.5rem;
-
-      @media (min-width: 1000px) {
-        padding: 0;
-        display: grid;
-        width: max-content;
-        grid-template-columns: repeat(var(--galery-cols, 4), var(--galery-col-width));
-      }
-    }
-
-    @media screen and (min-width: 1000px) {
-      grid-template-columns: repeat(4, calc(25% - 1.5dvw * 3 / 4));
-      grid-template-rows: 27.5dvh 15dvh 27.5dvh;
+    @media screen and (min-width: 990px) {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 30dvh;
+      grid-auto-flow: dense;
       grid-gap: 1.5dvw;
 
-      > *:nth-child(odd) {
+      > *:nth-child(4n + 1) {
         grid-column: span 2;
-        grid-row: 1 / span 2;
+        grid-row: span 2;
       }
-      > *:nth-child(even) {
+      > *:nth-child(4n + 2) {
         grid-column: span 2;
-        grid-row: 3;
+        grid-row: span 1;
       }
-
-      @for $i from 0 through 1 {
-        $n: $i * 5;
-        $col: $i * 4;
-
-        > *:nth-child(#{$n + 1}) {
-          grid-column: #{$col + 1} / span 2;
-          grid-row: 1 / span 2;
-        }
-        > *:nth-child(#{$n + 2}) {
-          grid-column: #{$col + 3} / span 2;
-          grid-row: 1;
-        }
-        > *:nth-child(#{$n + 3}) {
-          grid-column: #{$col + 1};
-          grid-row: 3;
-        }
-        > *:nth-child(#{$n + 4}) {
-          grid-column: #{$col + 2};
-          grid-row: 3;
-        }
-        > *:nth-child(#{$n + 5}) {
-          grid-column: #{$col + 3} / span 2;
-          grid-row: 2 / span 2;
-        }
+      > *:nth-child(4n + 3),
+      > *:nth-child(4n + 4) {
+        grid-column: span 1;
+        grid-row: span 1;
       }
     }
   }

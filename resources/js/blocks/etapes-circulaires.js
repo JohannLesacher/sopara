@@ -11,7 +11,7 @@ const segmentLength = (count) => ((360 / count - RING_GAP_DEG) / 360) * 100;
 
 const angleFor = (index, count) => {
   if (count === 6) {
-    return ((index + 1) * 60) % 360;
+    return (index * 60) % 360;
   }
   return (360 / count) * (index + 0.5);
 };

@@ -2,7 +2,9 @@
   class="block-agent-local {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }}">
   <div class="block-agent-local__media">
     @if($imageId())
-      {!! wp_get_attachment_image($imageId(), 'large') !!}
+      {!! wp_get_attachment_image($imageId(), 'large', false, [
+            'alt' => $imageAlt()
+          ]) !!}
     @endif
   </div>
 
@@ -10,7 +12,9 @@
     <div class="block-agent-local__row block-agent-local__row--head">
       <div class="block-agent-local__logo">
         @if($logoId())
-          {!! wp_get_attachment_image($logoId(), 'medium') !!}
+          {!! wp_get_attachment_image($logoId(), 'medium', false, [
+            'alt' => $title() ?? '',
+          ]) !!}
         @endif
       </div>
 

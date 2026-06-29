@@ -15,6 +15,16 @@ class Emetteur extends Composer
         return $id ? (int) $id : null;
     }
 
+    public function imageAlt(): ?string
+    {
+        $id = $this->view->getData()['data']['image'] ?? null;
+        if (! $id) {
+            return null;
+        }
+
+        return get_post_meta($id, '_wp_attachment_image_alt', true);
+    }
+
     public function titre(): string
     {
         return $this->view->getData()['data']['titre'] ?? '';

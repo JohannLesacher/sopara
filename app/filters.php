@@ -63,3 +63,24 @@ add_filter('image_size_names_choose', function ($sizes) {
         'very-large' => __('Très large', 'sage'),
     ]);
 });
+
+add_action('wp_head', function () {
+    if (!is_singular()) return;
+
+    $post = get_post();
+    if (has_block('core/cover', $post->post_content)) {
+        $blocks = parse_blocks($post->post_content);
+
+        $filtered_blocks = array_values(array_filter($blocks, function($block) {
+            return !empty(trim($block['blockName'] ?? ''));
+        }));
+
+        if (!empty($filtered_blocks) && $filtered_blocks[0]['blockName'] === 'core/cover') {
+            $first_block = $filtered_blocks[0];
+
+            if (isset($first_block['attrs']['url'])) {
+                echo '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url($first_block['attrs']['url']) . '">';
+            }
+        }
+    }
+}, 1);

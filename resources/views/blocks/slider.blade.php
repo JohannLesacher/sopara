@@ -9,7 +9,7 @@
       <button
         class="splide__arrow splide__arrow--prev"
         type="button"
-        aria-label="Previous slide"
+        aria-label="{{ pll__('Diapositive précédente') }}"
         aria-controls="splide01-track"
       >
         @svg('arrow')
@@ -17,7 +17,7 @@
       <button
         class="splide__arrow splide__arrow--next"
         type="button"
-        aria-label="Next slide"
+        aria-label="{{ pll__('Diapositive suivante') }}"
         aria-controls="splide01-track"
       > @svg('arrow')
       </button>

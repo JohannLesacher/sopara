@@ -115,12 +115,12 @@ class EtapesCirculaires extends Composer
     private function itemsSix(array $etapes): array
     {
         $layout = [
-            1 => ['row' => 2, 'col' => 3, 'side' => 'right'],
-            2 => ['row' => 3, 'col' => 3, 'side' => 'right'],
-            3 => ['row' => 4, 'col' => 2, 'side' => 'bottom'],
-            4 => ['row' => 3, 'col' => 1, 'side' => 'left'],
-            5 => ['row' => 2, 'col' => 1, 'side' => 'left'],
-            6 => ['row' => 1, 'col' => 2, 'side' => 'top'],
+            1 => ['row' => 1, 'col' => 2, 'side' => 'top'],
+            2 => ['row' => 2, 'col' => 3, 'side' => 'right'],
+            3 => ['row' => 3, 'col' => 3, 'side' => 'right'],
+            4 => ['row' => 4, 'col' => 2, 'side' => 'bottom'],
+            5 => ['row' => 3, 'col' => 1, 'side' => 'left'],
+            6 => ['row' => 2, 'col' => 1, 'side' => 'left'],
         ];
 
         $items = [];
@@ -128,7 +128,7 @@ class EtapesCirculaires extends Composer
         foreach ($etapes as $i => $etape) {
             $step = $i + 1;
             $cfg = $layout[$step];
-            $angleDeg = (60 * $step) % 360;
+            $angleDeg = (60 * ($step - 1)) % 360;
             $rad = deg2rad($angleDeg);
 
             $items[] = [

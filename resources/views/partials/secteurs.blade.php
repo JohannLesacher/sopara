@@ -2,8 +2,13 @@
   <div class="block-secteurs">
     @if($images)
       <div class="block-secteurs__images">
-        @foreach($images as $imageId)
-          {!! wp_get_attachment_image($imageId, 'thumbnail', false, ['class' => 'block-secteurs__img']) !!}
+        @foreach($images as $index => $imageId)
+          <a href="{!! get_the_permalink(pll_get_post($pages[$index] ?? 0)) !!}">
+            {!! wp_get_attachment_image($imageId, 'thumbnail', false, [
+              'class' => 'block-secteurs__img',
+              'alt' => get_the_title($pages[$index]),
+            ]) !!}
+          </a>
         @endforeach
       </div>
     @endif

@@ -1,11 +1,12 @@
 <section
   class="block-image-hotspots {!! $attributes['className'] ?? '' !!}"
 >
-  @if($image())
+  @if($imageId())
     <div class="block-image-hotspots__wrapper">
       <div class="block-image-hotspots__image-area">
-        {!! wp_get_attachment_image($image(), 'very-large', false, [
-          'class' => 'block-image-hotspots__image'
+        {!! wp_get_attachment_image($imageId(), 'very-large', false, [
+          'class' => 'block-image-hotspots__image',
+          'alt' => $imageAlt(),
         ]) !!}
 
         @foreach($points() as $index => $point)
@@ -23,7 +24,7 @@
             data-y="{{ $y }}"
             aria-controls="{!! $id !!}"
             aria-expanded="false"
-            aria-label="{!! $title ?: 'Point ' . ($index + 1) !!}"
+            aria-label="{!! $title ?: sprintf(pll__('Point %d'), $index + 1) !!}"
           ></button>
         @endforeach
       </div>
@@ -50,7 +51,7 @@
               <button
                 type="button"
                 class="block-image-hotspots__close"
-                aria-label="Fermer"
+                aria-label="{{ pll__('Fermer') }}"
               >
                 <span aria-hidden="true">&times;</span>
               </button>

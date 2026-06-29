@@ -18,6 +18,16 @@ class AgentLocal extends Composer
         return $imageId;
     }
 
+    public function imageAlt(): ?string
+    {
+        $imageId = $this->view->getData()['data']['image'] ?? null;
+        if (! $imageId) {
+            return null;
+        }
+
+        return get_post_meta($imageId, '_wp_attachment_image_alt', true);
+    }
+
     public function logoId(): ?int
     {
         $logoId = $this->view->getData()['data']['logo'] ?? null;

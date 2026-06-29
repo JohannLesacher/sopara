@@ -8,14 +8,24 @@ class HoverSectorImage extends Composer
 {
     protected static $views = ['blocks.hover-sector-image'];
 
-    public function imageSrc(): ?string
+    public function imageId(): ?string
     {
         $imageId = $this->view->getData()['data']['image'] ?? null;
         if (! $imageId) {
             return null;
         }
 
-        return wp_get_attachment_image_src($imageId, 'large')[0] ?? null;
+        return $imageId;
+    }
+
+    public function imageAlt(): ?string
+    {
+        $imageId = $this->view->getData()['data']['image'] ?? null;
+        if (! $imageId) {
+            return null;
+        }
+
+        return get_post_meta($imageId, '_wp_attachment_image_alt', true);
     }
 
     public function tag(): string

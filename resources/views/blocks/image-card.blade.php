@@ -1,7 +1,9 @@
 <article
   class="block-image-card {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }}">
   <div class="block-image-card__media">
-    <img src="{!! $imageSrc() !!}" alt="" />
+    {!! wp_get_attachment_image($imageId(), 'large', false, [
+      'alt' => $imageAlt()
+    ]) !!}
   </div>
   <div class="block-image-card__overlay">
     <div class="block-image-card__content">

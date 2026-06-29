@@ -27,6 +27,16 @@ class FriseChronologique extends Composer
             return [];
         }
 
-        return array_values(array_filter($raw, fn ($etape) => ! empty($etape['date']) || ! empty($etape['titre'])));
+        $validEtapes = array_filter($raw, fn ($etape) => ! empty($etape['date']) || ! empty($etape['titre']));
+
+        return array_map(function ($etape) {
+            $etape['imageAlt'] = '';
+
+            if (! empty($etape['image'])) {
+                $etape['imageAlt'] = get_post_meta($etape['image'], '_wp_attachment_image_alt', true);
+            }
+
+            return $etape;
+        }, array_values($validEtapes));
     }
 }

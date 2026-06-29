@@ -7,8 +7,10 @@
   &.is-style-hero-banner {
     .wp-block-cover__inner-container {
       padding-bottom: 8rem;
+      width: 100%;
 
       @media (min-width: 1200px) {
+        min-width: 0;
         max-width: calc(100% - 605px);
         padding-bottom: 0
       }

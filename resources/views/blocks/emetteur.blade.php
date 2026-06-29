@@ -1,7 +1,10 @@
 <article class="block-emetteur {!! $blockClass() !!} {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}" style="{!! $blockStyle() !!}" >
   @if($imageId())
     <div class="block-emetteur__image">
-      {!! wp_get_attachment_image($imageId(), 'medium') !!}
+      {!! wp_get_attachment_image($imageId(), 'medium', false, [
+        'alt' => $imageAlt(),
+        'fetchpriority' => 'auto'
+      ]) !!}
     </div>
   @endif
 

@@ -66,6 +66,16 @@ class ThemeSettings
                         'type' => 'image_advanced',
                         'max_file_uploads' => 6,
                     ],
+                    [
+                        'id' => 'pages_secteurs',
+                        'name' => 'Pages des secteurs',
+                        'type' => 'post',
+                        'clone' => true,
+                        'sort_clone' => true,
+                        'add_button' => '+ Ajouter une page',
+                        'description' => 'Ajouter une page pour chaque secteur d\'activité. Même ordre que les images.',
+                        'post_type' => 'page',
+                    ]
                 ],
             ];
 

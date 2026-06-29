@@ -131,6 +131,11 @@
     box-sizing: border-box;
   }
 
+  &[data-count="6"] &__box:nth-child(2) &__titre {
+    top: initial;
+    bottom: 0;
+  }
+
   &__titre {
     font-weight: 600;
     transition: opacity 0.3s ease;

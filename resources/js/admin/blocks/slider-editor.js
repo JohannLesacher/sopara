@@ -5,7 +5,7 @@ import {
   InspectorControls,
 } from '@wordpress/block-editor';
 import { createElement as el, Fragment } from '@wordpress/element';
-import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, RangeControl, ToggleControl, TextControl } from '@wordpress/components';
 
 registerBlockType('sur-mesure/slider', {
   apiVersion: 3,
@@ -13,6 +13,7 @@ registerBlockType('sur-mesure/slider', {
   category: 'sur-mesure',
   icon: 'slides',
   attributes: {
+    titre: { type: 'text', default: "" },
     perPage: { type: 'number', default: 3 },
     perPageTablet: { type: 'number' },
     perPageMobile: { type: 'number' },
@@ -35,6 +36,11 @@ registerBlockType('sur-mesure/slider', {
         el(
           PanelBody,
           { title: 'Disposition', initialOpen: true },
+          el(TextControl, {
+            label: 'Titre',
+            value: attributes.titre,
+            onChange: (val) => setAttributes({ titre: val }),
+          }),
           el(RangeControl, {
             label: 'Slides par page (desktop)',
             value: attributes.perPage,

@@ -1,8 +1,10 @@
 <article
   class="block-hover-sector-image {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }} is-animated">
-  @if($imageSrc())
+  @if($imageId())
     <div class="block-hover-sector-image__media">
-      <img src="{!! $imageSrc() !!}" alt="" />
+      {!! wp_get_attachment_image($imageId(), 'large', false, [
+        'alt' => $imageAlt()
+      ]) !!}
     </div>
   @endif
 

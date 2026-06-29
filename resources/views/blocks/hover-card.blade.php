@@ -1,9 +1,11 @@
 <article
   class="block-hover-card {{ $attributes['className'] ?? '' }} align{!! $attributes['align'] ?? 'normal' !!}{{ $is_preview ? ' is-preview' : '' }} is-animated">
   <div class="block-hover-card__face block-hover-card__face--front">
-    @if($imageSrc())
+    @if($imageId())
       <div class="block-hover-card__media">
-        <img src="{!! $imageSrc() !!}" alt="" />
+        {!! wp_get_attachment_image($imageId(), 'large', false, [
+          'alt' => $imageAlt()
+        ]) !!}
       </div>
     @endif
     @if($titre())

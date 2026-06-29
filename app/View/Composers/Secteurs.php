@@ -23,6 +23,7 @@ class Secteurs extends Composer
             'shouldDisplay' => $this->shouldDisplay(),
             'titre' => $this->titre(),
             'images' => $this->images(),
+            'pages' => $this->pages(),
         ];
     }
 
@@ -45,6 +46,13 @@ class Secteurs extends Composer
     protected function images(): array
     {
         $ids = $this->settings['images_secteurs'] ?? [];
+
+        return is_array($ids) ? array_values(array_filter($ids)) : [];
+    }
+
+    protected function pages(): array
+    {
+        $ids = $this->settings['pages_secteurs'] ?? [];
 
         return is_array($ids) ? array_values(array_filter($ids)) : [];
     }

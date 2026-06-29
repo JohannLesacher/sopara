@@ -1,4 +1,4 @@
-class HorizontalScroll {
+export class HorizontalScroll {
   static SELECTOR = '[js-horizontal-scroll]';
   static MEDIA_QUERY = '(min-width: 1000px)';
 

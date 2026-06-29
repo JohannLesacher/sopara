@@ -75,3 +75,7 @@ a {
 .main .extra-wide {
   grid-column: extra-wide;
 }
+
+.text-wrap-reset {
+  text-wrap: unset !important;
+}
