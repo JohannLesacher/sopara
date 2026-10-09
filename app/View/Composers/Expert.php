@@ -17,7 +17,7 @@ class Expert extends Composer
         $this->expertId = get_queried_object_id();
 
         return [
-            'photoId' => (int) get_post_thumbnail_id($this->expertId),
+            'photoId' => (int) $this->meta('photo'),
             'fonction' => $this->meta('fonction'),
             'expertise' => nl2br(esc_html($this->meta('expertise'))),
             'experience' => (int) $this->meta('annees_experience'),

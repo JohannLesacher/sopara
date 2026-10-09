@@ -31,6 +31,8 @@ class TranslationServiceProvider extends ServiceProvider
             pll_register_string('blog-prev', 'Précédent', 'theme');
             pll_register_string('blog-next', 'Suivant', 'theme');
             pll_register_string('blog-breadcrumb', 'Fil d\'Ariane', 'theme');
+            pll_register_string('blog-type-contenu', 'Types de contenu', 'theme');
+            pll_register_string('blog-secteur-activite', 'Secteurs d\'activité', 'theme');
             pll_register_string('expert-expertise', 'Expertise', 'theme');
             pll_register_string('expert-experience', 'Expérience', 'theme');
             pll_register_string('expert-years', '%d ans', 'theme');

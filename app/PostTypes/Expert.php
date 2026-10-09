@@ -13,6 +13,11 @@ class Expert
             'post_types' => $this->post_type,
             'fields' => [
                 [
+                    'id' => 'photo',
+                    'name' => 'Photo de profil',
+                    'type' => 'single_image',
+                ],
+                [
                     'id' => 'fonction',
                     'name' => 'Fonction',
                     'type' => 'text',

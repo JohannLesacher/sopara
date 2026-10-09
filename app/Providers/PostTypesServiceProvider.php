@@ -51,10 +51,8 @@ class PostTypesServiceProvider extends ServiceProvider {
 
         /**
          * Posts
-         * @uses Post::storeReadingTime
          * @uses Post::adjustMainQuery
          */
-        add_action( 'save_post_post', [ $post, 'storeReadingTime' ], 10, 2 );
         add_action( 'pre_get_posts', [ $post, 'adjustMainQuery' ] );
     }
 

@@ -89,7 +89,7 @@ class ThemeSettings
                         'id' => 'banner_default',
                         'name' => 'Image par défaut',
                         'type' => 'single_image',
-                        'desc' => 'Utilisée pour les experts et les contenus sans image.',
+                        'desc' => 'Utilisée pour les contenus sans image de bannière.',
                     ],
                 ],
             ];

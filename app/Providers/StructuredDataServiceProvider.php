@@ -28,6 +28,7 @@ class StructuredDataServiceProvider extends ServiceProvider
             add_filter('wpseo_schema_graph_pieces', [$structuredData, 'addExpertPieces']);
             add_filter('wpseo_schema_needs_author', [$structuredData, 'needsYoastAuthor']);
             add_filter('wpseo_schema_article', [$structuredData, 'blogPostingAuthor'], 10, 2);
+            add_filter('wpseo_breadcrumb_links', [$structuredData, 'taxonomyBreadcrumbLinks']);
         }
     }
 }

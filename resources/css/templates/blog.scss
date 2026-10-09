@@ -8,9 +8,15 @@
   }
 }
 
-.archive-intro {
-  max-width: 60rem;
-  margin-bottom: var(--wp--preset--spacing--70);
+.archive {
+  &__intro {
+    max-width: 60rem;
+    margin-bottom: var(--wp--preset--spacing--70);
+  }
+
+  &__posts {
+    margin-bottom: var(--wp--preset--spacing--80);
+  }
 }
 
 .post-grid {

@@ -59,7 +59,7 @@ class SinglePost extends Composer
         return array_map(fn (WP_Post $expert) => [
             'name' => get_the_title($expert),
             'url' => get_permalink($expert),
-            'imageId' => (int) get_post_thumbnail_id($expert),
+            'imageId' => (int) get_post_meta($expert->ID, 'photo', true),
         ], $this->blogPost->experts($this->postId));
     }
 

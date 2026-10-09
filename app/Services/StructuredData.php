@@ -56,6 +56,40 @@ class StructuredData
     }
 
     /**
+     * Archives `type_contenu` / `secteur_activite` : Accueil > Blog > Taxonomie > Terme.
+     */
+    public function taxonomyBreadcrumbLinks(array $crumbs): array
+    {
+        if (! is_tax(['type_contenu', 'secteur_activite'])) {
+            return $crumbs;
+        }
+
+        $taxonomy = get_taxonomy(get_queried_object()->taxonomy);
+        $termIndex = count($crumbs) - 1;
+        $insert = [];
+
+        foreach ($crumbs as $index => $crumb) {
+            if (($crumb['taxonomy'] ?? null) === $taxonomy->name) {
+                $termIndex = $index;
+                break;
+            }
+        }
+
+        $blogId = (int) get_option('page_for_posts');
+        $blogUrl = $blogId ? get_permalink($blogId) : '';
+
+        if ($blogUrl && ! in_array($blogUrl, array_column($crumbs, 'url'), true)) {
+            $insert[] = ['url' => $blogUrl, 'text' => get_the_title($blogId)];
+        }
+
+        $insert[] = ['url' => '', 'text' => pll__($taxonomy->labels->name), 'hide_in_schema' => true];
+
+        array_splice($crumbs, $termIndex, 0, $insert);
+
+        return $crumbs;
+    }
+
+    /**
      * Persiste l'attribut du toggle « Ajouter aux données structurées »
      * côté PHP (miroir de l'enregistrement JS dans resources/js/admin/accordion.js).
      */

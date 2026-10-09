@@ -5,8 +5,10 @@
   @include('partials.breadcrumb')
 
   @if($intro)
-    <div class="archive-intro">{!! $intro !!}</div>
+    <div class="archive__intro">{!! $intro !!}</div>
   @endif
 
-  @include('partials.post-grid', ['posts' => $posts, 'paginate' => true])
+  <div class="archive__posts">
+    @include('partials.post-grid', ['posts' => $posts, 'paginate' => true])
+  </div>
 @endsection

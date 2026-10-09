@@ -62,7 +62,7 @@ class ExpertPerson extends Abstract_Schema_Piece
         $fonction = (string) get_post_meta($expert->ID, 'fonction', true);
         $expertise = (string) get_post_meta($expert->ID, 'expertise', true);
         $linkedin = (string) get_post_meta($expert->ID, 'linkedin', true);
-        $imageUrl = get_the_post_thumbnail_url($expert, 'medium');
+        $imageUrl = wp_get_attachment_image_url((int) get_post_meta($expert->ID, 'photo', true), 'medium');
 
         if ($fonction !== '') {
             $data['jobTitle'] = $fonction;

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use WP_Post;
 use WP_Term;
+use WPSEO_Meta;
 
 class BlogPost
 {
@@ -13,9 +14,7 @@ class BlogPost
 
     public function readingTime(int $postId): int
     {
-        $override = (int) get_post_meta($postId, 'reading_time_override', true);
-
-        return $override > 0 ? $override : (int) get_post_meta($postId, '_reading_time', true);
+        return class_exists(WPSEO_Meta::class) ? (int) WPSEO_Meta::get_value('estimated-reading-time-minutes', $postId) : 0;
     }
 
     /**
@@ -132,7 +131,7 @@ class BlogPost
             return (int) get_post_thumbnail_id((int) get_option('page_for_posts'));
         }
 
-        if (is_singular('post')) {
+        if (is_singular(['post', 'expert'])) {
             return (int) get_post_thumbnail_id(get_queried_object_id());
         }
 
