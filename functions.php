@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\BlockServiceProvider;
+use App\Providers\BlogPostServiceProvider;
 use App\Providers\MegamenuServiceProvider;
 use App\Providers\PostTypesServiceProvider;
 use App\Providers\StructuredDataServiceProvider;
@@ -42,6 +43,7 @@ Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
         PostTypesServiceProvider::class,
+        BlogPostServiceProvider::class,
         BlockServiceProvider::class,
         ThemeSettingsServiceProvider::class,
         MegamenuServiceProvider::class,

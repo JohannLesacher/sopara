@@ -1,0 +1,16 @@
+.block-key-figure {
+  &__value {
+    margin: 0;
+    font-size: var(--wp--preset--font-size--h-1);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__unit {
+    font-size: 0.5em;
+  }
+
+  &__label {
+    margin: 0.5rem 0 0;
+  }
+}

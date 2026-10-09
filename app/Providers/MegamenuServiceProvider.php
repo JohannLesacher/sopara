@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Services\Megamenu;
-use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class MegamenuServiceProvider extends LaravelServiceProvider {
+class MegamenuServiceProvider extends ServiceProvider {
     /**
      * Register the service.
      */

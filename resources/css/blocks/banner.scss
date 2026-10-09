@@ -1,0 +1,66 @@
+.page-banner {
+  position: relative;
+  isolation: isolate;
+  align-items: end;
+  min-height: 35vh;
+  padding: 10rem 1em var(--wp--preset--spacing--70) 0;
+  overflow: clip;
+  clip-path: inset(0);
+  color: var(--wp--preset--color--white);
+
+  @media (min-width: 1200px) {
+    padding-right: 0;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--wp--preset--color--black);
+    opacity: 0.3;
+  }
+
+  &__image {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    height: 100%;
+    object-fit: cover;
+    object-position: 0% 100%;
+
+    // Annule `.main > .alignfull > * { grid-column: content }` (fallback absolute)
+    .page-banner > & {
+      grid-column: initial;
+    }
+
+    @supports (-webkit-touch-callout: inherit) {
+      position: absolute;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      position: absolute;
+    }
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 2;
+    padding-bottom: 8rem;
+
+    @media (min-width: 1200px) {
+      max-width: calc(100% - 605px);
+      padding-bottom: 0;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--wp--preset--font-family--syncopate);
+    font-size: var(--wp--preset--font-size--h-4);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+    text-transform: uppercase;
+  }
+}

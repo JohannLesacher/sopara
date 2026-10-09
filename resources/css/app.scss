@@ -11,6 +11,9 @@
 @use "sections/header";
 @use "sections/footer";
 @use "sections/secteurs";
+@use "templates/blog";
+@use "blocks/banner";
+@use "templates/expert";
 
 @use "blocks/font-styles";
 @use "blocks/buttons";

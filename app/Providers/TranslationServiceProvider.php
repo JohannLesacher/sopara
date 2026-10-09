@@ -22,6 +22,19 @@ class TranslationServiceProvider extends ServiceProvider
             pll_register_string('slider-prev', 'Diapositive précédente', 'theme');
             pll_register_string('slider-next', 'Diapositive suivante', 'theme');
 
+            // Blog
+            pll_register_string('blog-reading-time', '%d min de lecture', 'theme');
+            pll_register_string('blog-published', 'Publié le', 'theme');
+            pll_register_string('blog-updated', 'Mis à jour le', 'theme');
+            pll_register_string('blog-related', 'Articles liés', 'theme');
+            pll_register_string('blog-pagination', 'Pagination', 'theme');
+            pll_register_string('blog-prev', 'Précédent', 'theme');
+            pll_register_string('blog-next', 'Suivant', 'theme');
+            pll_register_string('blog-breadcrumb', 'Fil d\'Ariane', 'theme');
+            pll_register_string('expert-expertise', 'Expertise', 'theme');
+            pll_register_string('expert-experience', 'Expérience', 'theme');
+            pll_register_string('expert-years', '%d ans', 'theme');
+
             // Header
             pll_register_string('header-menu', 'MENU', 'theme');
             pll_register_string('header-menu-aria', 'Menu', 'theme');

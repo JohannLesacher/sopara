@@ -2,10 +2,59 @@
 
 namespace App\Services;
 
+use App\Services\Schema\ExpertPerson;
 use WP_Post;
 
 class StructuredData
 {
+    private BlogPost $blogPost;
+
+    public function __construct(BlogPost $blogPost)
+    {
+        $this->blogPost = $blogPost;
+    }
+
+    public function blogPostingType(string|array $type, object $indexable): string|array
+    {
+        return $indexable->object_sub_type === 'post' ? 'BlogPosting' : $type;
+    }
+
+    public function addExpertPieces(array $pieces): array
+    {
+        $pieces[] = new ExpertPerson($this->blogPost);
+
+        return $pieces;
+    }
+
+    public function needsYoastAuthor(bool $isNeeded): bool
+    {
+        return is_singular('post') ? false : $isNeeded;
+    }
+
+    public function blogPostingAuthor(array $data, object $context): array
+    {
+        if (! is_singular('post')) {
+            return $data;
+        }
+
+        $authors = array_map(
+            fn (WP_Post $expert) => ['@id' => ExpertPerson::schemaId($expert)],
+            $this->blogPost->experts(get_queried_object_id())
+        );
+
+        if (! $authors && ! empty($context->site_represents_reference)) {
+            $authors = [$context->site_represents_reference];
+        }
+
+        if ($authors) {
+            $data['author'] = count($authors) === 1 ? $authors[0] : $authors;
+        } else {
+            unset($data['author']);
+        }
+
+        return $data;
+    }
+
     /**
      * Persiste l'attribut du toggle « Ajouter aux données structurées »
      * côté PHP (miroir de l'enregistrement JS dans resources/js/admin/accordion.js).

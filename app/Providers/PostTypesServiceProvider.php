@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\PostTypes\Post;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -22,7 +23,7 @@ class PostTypesServiceProvider extends ServiceProvider {
         }
     }
 
-    public function boot(): void {
+    public function boot( Post $post ): void {
         add_action( 'init', function (): void {
             Collection::make( config( 'post-types.post_types' ) )
                       ->each( function ( $args, $post_type ) {
@@ -47,6 +48,14 @@ class PostTypesServiceProvider extends ServiceProvider {
         }, 100 );
 
         add_filter( 'rwmb_meta_boxes', [ $this, 'loadPostTypesMetas' ] );
+
+        /**
+         * Posts
+         * @uses Post::storeReadingTime
+         * @uses Post::adjustMainQuery
+         */
+        add_action( 'save_post_post', [ $post, 'storeReadingTime' ], 10, 2 );
+        add_action( 'pre_get_posts', [ $post, 'adjustMainQuery' ] );
     }
 
     public function loadPostTypesMetas( array $meta_boxes ): array {

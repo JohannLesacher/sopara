@@ -84,3 +84,13 @@ add_action('wp_head', function () {
         }
     }
 }, 1);
+
+/**
+ * WebP output for generated image sizes
+ */
+add_filter('image_editor_output_format', function (array $formats): array {
+    $formats['image/jpeg'] = 'image/webp';
+    $formats['image/png']  = 'image/webp';
+
+    return $formats;
+});

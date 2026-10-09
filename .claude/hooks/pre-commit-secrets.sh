@@ -1,80 +1,31 @@
 #!/usr/bin/env bash
-# Hook PreToolUse: detects secrets in files before git commit.
-# Activates only on "git commit" commands. Scans staged files
-# looking for API key, token, password, and private key patterns.
-# If match found: prints {"decision":"block","reason":"..."} and exit 0.
-# If clean: prints {"decision":"allow"} and exit 0.
+# PreToolUse: blocks git commit if staged changes contain secrets. Outputs nothing otherwise.
 
-# Do not use set -euo pipefail: the script must ALWAYS exit with 0
+INPUT=$(cat)
+COMMAND=$(jq -r '.tool_input.command // empty' <<<"$INPUT")
+CWD=$(jq -r '.cwd // empty' <<<"$INPUT")
 
-# Read JSON input from stdin
-INPUT=$(cat 2>/dev/null || true)
+grep -qE 'git\s+commit' <<<"$COMMAND" || exit 0
 
-# Extract the bash command from JSON input
-COMMAND=$(echo "$INPUT" | grep -o '"command"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' 2>/dev/null || true)
+ADDED=$(git -C "${CWD:-.}" diff --cached -U0 --diff-filter=ACM -- . ':!*.lock' ':!*.min.*' ':!*.map' 2>/dev/null \
+    | grep '^+' | grep -v '^+++')
+[[ -z "$ADDED" ]] && exit 0
 
-# Activate only for git commit commands
-if ! echo "$COMMAND" | grep -qE 'git\s+commit'; then
-    echo '{"decision":"allow"}'
-    exit 0
-fi
-
-# Determine the project dir
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-}"
-if [[ -z "$PROJECT_DIR" ]]; then
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-fi
-
-# Get staged files
-STAGED_FILES=$(cd "$PROJECT_DIR" && git diff --cached --name-only 2>/dev/null || true)
-
-if [[ -z "$STAGED_FILES" ]]; then
-    echo '{"decision":"allow"}'
-    exit 0
-fi
-
-# Secret patterns to look for
-SECRET_PATTERNS=(
-    'AKIA[0-9A-Z]{16}'                          # AWS Access Key
-    'sk-[a-zA-Z0-9]{20,}'                       # OpenAI / Stripe key
-    'ghp_[a-zA-Z0-9]{36}'                       # GitHub PAT
-    'glpat-[a-zA-Z0-9\-]{20,}'                  # GitLab PAT
-    '-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----' # Private key
-    'xox[bprs]-[a-zA-Z0-9\-]{10,}'              # Slack token
+PATTERNS=(
+    'AKIA[0-9A-Z]{16}'
+    'sk-[a-zA-Z0-9]{20,}'
+    'ghp_[a-zA-Z0-9]{36}'
+    'glpat-[a-zA-Z0-9-]{20,}'
+    '-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----'
+    'xox[bprs]-[a-zA-Z0-9-]{10,}'
 )
 
-FOUND_SECRETS=""
+FOUND=()
+for p in "${PATTERNS[@]}"; do
+    grep -qE -e "$p" <<<"$ADDED" && FOUND+=("$p")
+done
+[[ ${#FOUND[@]} -eq 0 ]] && exit 0
 
-while IFS= read -r file; do
-    # Skip binary files and lock files
-    case "$file" in
-        *.lock|*.min.js|*.min.css|*.map|*.woff*|*.ttf|*.eot|*.png|*.jpg|*.gif|*.ico|*.svg)
-            continue
-            ;;
-    esac
-
-    # Check if the file exists
-    FULL_PATH="$PROJECT_DIR/$file"
-    if [[ ! -f "$FULL_PATH" ]]; then
-        continue
-    fi
-
-    for pattern in "${SECRET_PATTERNS[@]}"; do
-        MATCH=$(grep -nE "$pattern" "$FULL_PATH" 2>/dev/null | head -3 || true)
-        if [[ -n "$MATCH" ]]; then
-            FOUND_SECRETS="${FOUND_SECRETS}\n- ${file}: pattern '${pattern}'"
-        fi
-    done
-done <<< "$STAGED_FILES"
-
-# Result
-if [[ -n "$FOUND_SECRETS" ]]; then
-    # Remove newlines for JSON
-    CLEAN_SECRETS=$(echo -e "$FOUND_SECRETS" | tr '\n' ' ' | sed 's/"/\\"/g')
-    echo "{\"decision\":\"block\",\"reason\":\"Possible secrets found in staged files:${CLEAN_SECRETS}Remove secrets before committing.\"}"
-else
-    echo '{"decision":"allow"}'
-fi
-
+jq -n --arg r "Possible secrets in staged changes (patterns: ${FOUND[*]}). Remove them before committing." \
+    '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: $r}}'
 exit 0
