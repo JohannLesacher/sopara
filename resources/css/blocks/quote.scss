@@ -1,0 +1,10 @@
+.wp-block-quote {
+  &::before {
+    content: "“";
+    float: left;
+    font-size: var(--wp--preset--font-size--h-1);
+    line-height: 1;
+    margin-right: 0.5rem;
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+}

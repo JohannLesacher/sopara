@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\Schema\ExpertPerson;
 use WP_Post;
 
 class StructuredData
@@ -14,45 +13,24 @@ class StructuredData
         $this->blogPost = $blogPost;
     }
 
-    public function blogPostingType(string|array $type, object $indexable): string|array
+    /**
+     * Imprime le JSON-LD BlogPosting + Person (articles) ou Person (experts),
+     * indépendant de Yoast / SASWP.
+     */
+    public function printBlogSchema(): void
     {
-        return $indexable->object_sub_type === 'post' ? 'BlogPosting' : $type;
-    }
-
-    public function addExpertPieces(array $pieces): array
-    {
-        $pieces[] = new ExpertPerson($this->blogPost);
-
-        return $pieces;
-    }
-
-    public function needsYoastAuthor(bool $isNeeded): bool
-    {
-        return is_singular('post') ? false : $isNeeded;
-    }
-
-    public function blogPostingAuthor(array $data, object $context): array
-    {
-        if (! is_singular('post')) {
-            return $data;
-        }
-
-        $authors = array_map(
-            fn (WP_Post $expert) => ['@id' => ExpertPerson::schemaId($expert)],
-            $this->blogPost->experts(get_queried_object_id())
-        );
-
-        if (! $authors && ! empty($context->site_represents_reference)) {
-            $authors = [$context->site_represents_reference];
-        }
-
-        if ($authors) {
-            $data['author'] = count($authors) === 1 ? $authors[0] : $authors;
+        if (is_singular('post')) {
+            $graph = $this->blogPostingGraph(get_queried_object());
+        } elseif (is_singular('expert')) {
+            $graph = [$this->expertPerson(get_queried_object())];
         } else {
-            unset($data['author']);
+            return;
         }
 
-        return $data;
+        $this->printJsonLd([
+            '@context' => 'https://schema.org',
+            '@graph' => $graph,
+        ]);
     }
 
     /**
@@ -60,7 +38,7 @@ class StructuredData
      */
     public function taxonomyBreadcrumbLinks(array $crumbs): array
     {
-        if (! is_tax(['type_contenu', 'secteur_activite'])) {
+        if (! is_tax(['type_contenu', 'secteur_activite']) && ! is_category()) {
             return $crumbs;
         }
 
@@ -128,16 +106,66 @@ class StructuredData
             return;
         }
 
-        $schema = [
+        $this->printJsonLd([
             '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
             'mainEntity' => $entities,
-        ];
+        ]);
+    }
 
+    private function printJsonLd(array $schema): void
+    {
         printf(
             '<script type="application/ld+json">%s</script>'."\n",
             wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
         );
+    }
+
+    private function blogPostingGraph(WP_Post $post): array
+    {
+        $experts = $this->blogPost->experts($post->ID);
+        $url = get_permalink($post);
+
+        $posting = array_filter([
+            '@type' => 'BlogPosting',
+            '@id' => $url.'#article',
+            'headline' => $this->plainText(get_the_title($post)),
+            'description' => $this->plainText(get_the_excerpt($post)),
+            'image' => get_the_post_thumbnail_url($post, 'very-large'),
+            'datePublished' => get_post_time('c', true, $post),
+            'dateModified' => get_post_modified_time('c', true, $post),
+            'inLanguage' => get_bloginfo('language'),
+            'mainEntityOfPage' => $url,
+            'author' => array_map(fn (WP_Post $expert) => ['@id' => $this->expertPersonId($expert)], $experts),
+        ]);
+
+        return [$posting, ...array_map(fn (WP_Post $expert) => $this->expertPerson($expert), $experts)];
+    }
+
+    private function expertPerson(WP_Post $expert): array
+    {
+        $linkedin = (string) get_post_meta($expert->ID, 'linkedin', true);
+
+        return array_filter([
+            '@type' => 'Person',
+            '@id' => $this->expertPersonId($expert),
+            'name' => $this->plainText(get_the_title($expert)),
+            'url' => get_permalink($expert),
+            'jobTitle' => (string) get_post_meta($expert->ID, 'fonction', true),
+            'knowsAbout' => (string) get_post_meta($expert->ID, 'expertise', true),
+            'image' => wp_get_attachment_image_url((int) get_post_meta($expert->ID, 'photo', true), 'medium'),
+            'sameAs' => $linkedin !== '' ? [$linkedin] : [],
+        ]);
+    }
+
+    private function expertPersonId(WP_Post $expert): string
+    {
+        return get_permalink($expert).'#person';
+    }
+
+    private function plainText(string $html): string
+    {
+        return $this->normalize(html_entity_decode(wp_strip_all_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
     }
 
     /**
