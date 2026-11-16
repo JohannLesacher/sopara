@@ -108,7 +108,11 @@ class BlogPost
 
     public function bannerImageId(): int
     {
-        return $this->queriedBannerImageId() ?: (int) (get_option('theme_settings', [])['banner_default'] ?? 0);
+        if (! is_singular('post')) {
+            return $this->queriedBannerImageId() ?: (int) (get_option('theme_settings', [])['banner_default'] ?? 0);
+        }
+
+        return (int) (get_option('theme_settings', [])['banner_default'] ?? 0);
     }
 
     public function preloadBannerImage(): void

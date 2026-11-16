@@ -36,20 +36,20 @@
                'raw' => true,
              ])
           )
-      
+
           {{-- Conteneur principal du sélecteur personnalisé --}}
           <div class="langswitcher">
             {{-- Bouton affichant la langue actuelle --}}
             <button class="langswitcher-trigger" aria-expanded="false" aria-controls="lang-options">
               @foreach($langs as $lang)
                 @if($lang['current_lang'])
-                  {!! $lang['flag'] !!}
+                  <img src="{!! $lang['flag'] !!}" alt="" style="width: 16px; height: 11px;">
                   <span class="lang-slug">{{ $lang['slug'] }}</span>
                   <span class="arrow-down"></span>
                 @endif
               @endforeach
             </button>
-      
+
             {{-- Liste déroulante des options --}}
             <ul class="langswitcher-options" id="lang-options" data-hidden="true">
               @foreach($langs as $lang)
@@ -58,7 +58,7 @@
                   data-url="{{ $lang['url'] }}"
                   tabindex="0"
                 >
-                  {!! $lang['flag'] !!}
+                  <img src="{!! $lang['flag'] !!}" alt="" style="width: 16px; margin-right: 8px; height: 11px;">
                   <span class="lang-slug">{{ $lang['slug'] }}</span>
                 </li>
               @endforeach

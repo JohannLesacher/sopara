@@ -20,6 +20,10 @@ return [
             'show_in_rest' => true,
             'has_archive' => false,
             'menu_position' => 5,
+            'rewrite' => [
+                'slug' => 'expert',
+                'with_front' => false,
+            ],
             'names' => [
                 'singular' => 'Expert',
                 'plural' => 'Experts',
